@@ -18,7 +18,7 @@ class Conexao{
 
 	public function getConexao()
 	{
-		return $con;
+		return $con; 
 	}
 
 	public function executarQuery( $conexao )
@@ -27,7 +27,7 @@ class Conexao{
 		{
 			$conexao->execute();
 			return true;
-		}catch(PDOException $e)
+		}catch( PDOException $e )
 		{
 			echo "<h1>Erro ao executar query!</h1>\n<h2>$e->getMessage()</h2>";
 		}
