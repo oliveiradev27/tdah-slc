@@ -46,10 +46,10 @@ include('header.php');
                 <select class="tmp tmp_phone" name="documento" STYLE="width: 110px">
                     <option value="CNPJ" selected>CNPJ</option>
                 </select>
-                <input type="text" name="valor" class="tmp_p tmp_w" value="" onBlur="ValidarCNPJ(ava_pac.valor);" onKeyPress="MascaraCNPJ(ava_pac.valor);" maxlength="14" >
+                <input type="text" name="valor" class="tmp_p tmp_w" value="" onKeyPress="MascaraCNPJ(ava_pac.valor);" maxlength="18" >
                 <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
-                <input type="text" name="cep" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" onBlur="ValidaCep(ava_pac.cep)" >
+                <input type="text" name="cep" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" >
                 <div class="ClearBoxli"></div>
                 <h3> Endereço</h3>
                 <input type="text" name="endereco" class="tmp_p tmp_w" value="" required style="width: 365px;font-weight: 500;padding: 0 3px" >
@@ -119,14 +119,12 @@ include('header.php');
 <script type="text/javascript" src="../js/validations.js"></script>
 <script type ="text/javascript">
 jQuery(document).ready(function($) {
-        if($('#id').val() != "")
-        {
-            $('.ava_pac :input').prop('disabled', true);
-        }
         $('.concluir').on('click', function(event) {
             event.preventDefault();
             console.log("passei aqui!");
-            console.log();
+            if(!verificarForm())
+                return false;
+
             var empresa         = $('[name="empresa"]').val();
             var dataRegistro    = $('[name="data"]').val();
             var documento       = $('[name="documento"]').val();
@@ -138,6 +136,41 @@ jQuery(document).ready(function($) {
             var numero          = $('[name="numero"]').val();
             var cidade          = $('[name="cidade"]').val();
             var uf              = $('[name="estado"]').val(); 
+
+             if(!ValidarCNPJ(ava_pac.valor))
+             {
+                 $("#mensagem p").text("CNPJ inválido!");
+                 $("#mensagem small").text("Por favor, insirá um CNPJ válido.");
+                 $("#mensagem").dialog({
+                       show: { effect: 'fade', speed: '1500' },
+                       hide: { effect: 'fade', speed: '1000' },
+                       buttons: {
+                           OK: function() {
+                                 $('input[name="valor"]').focus();
+                                 $(this).dialog("close");
+                             }
+                          }
+                        });
+
+                    return false;
+             }
+
+             if(!ValidaCep(ava_pac.cep))
+             {
+                 $("#mensagem p").text("CEP inválido!");
+                 $("#mensagem small").text("Por favor, insirá um CEP válido.");
+                 $("#mensagem").dialog({
+                        show: { effect: 'fade', speed: '1500' },
+                        hide: { effect: 'fade', speed: '1000' },
+                        buttons: {
+                            OK: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+
+                    return false;
+             }
 
             if(empresa == "" ||  empresa == null || numeroDocumento == "" || dataRegistro == "")
             {
@@ -183,6 +216,7 @@ jQuery(document).ready(function($) {
                     function(data) {
                         data = JSON.parse(data);
                         if(data){
+                            $('#id').val(data);
                             $("#mensagem p").text("Cadastrado com Sucesso!");
                             $("#mensagem small").text("Dados salvos na aplicação.");
                             $("#mensagem").dialog({
@@ -191,7 +225,6 @@ jQuery(document).ready(function($) {
                                 buttons: {
                                     OK: function() {
                                         $('input[name="valor"]').focus();
-                                        $('#id').val(data);
                                         $(this).dialog("close");
                                     }
                                 }
@@ -209,12 +242,41 @@ jQuery(document).ready(function($) {
                                     }
                                 }
                             });
-                        } 
+                        }
                     }
 
                 );
             }
         });
+
+        function verificarForm()
+        {
+            var id = $('#id').val();
+            if( id != "" && id != null)
+            {
+                console.log($('#id').val() );
+                $("#mensagem p").text("Deseja realizar outro cadastro?");
+                $("#mensagem small").text("Clique em Sim para iniciar com um novo cadastro.");
+                 $("#mensagem").dialog({
+                       show: { effect: 'fade', speed: '1500' },
+                       hide: { effect: 'fade', speed: '1000' },
+                       buttons: {
+                            Sim: function() {
+                                  location.reload();
+                            },
+                            Cancelar: function() {
+                                 $(this).dialog("close");
+                                 return false;                            
+                        }
+                   }
+             });
+             
+            } else {
+                return true;
+            }
+        }
+        
     });
+
 </script>
 </html>

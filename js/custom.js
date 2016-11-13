@@ -37,8 +37,10 @@ jQuery(document).ready(function($) {
             $("#mensagem").dialog({
                 show: { effect: 'fade', speed: '1500' },
                 hide: { effect: 'fade', speed: '1000' },
-                OK: function() {
-                    $(this).dialog("close");
+                buttons: {
+                    OK: function() {
+                        $(this).dialog("close");
+                    }
                 }
             });
         } else {
@@ -53,9 +55,10 @@ jQuery(document).ready(function($) {
                         $("#mensagem").dialog({
                             show: { effect: 'fade', speed: '1500' },
                             hide: { effect: 'fade', speed: '1000' },
-                            OK: function() {
-                                $('input[name="valor"]').focus();
-                                $(this).dialog("close");
+                            buttons: {
+                                OK: function() {
+                                    $(this).dialog("close");
+                                }
                             }
                         });
                         $('#login').val("");

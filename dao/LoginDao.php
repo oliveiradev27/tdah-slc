@@ -51,7 +51,7 @@ class LoginDao extends Conexao
     	if(isset($_SESSION['usuario']))
     	{
     		unset($_SESSION['usuario']);
-            session_abort();
+            session_destroy();
 			return true;
     	} else {
 			return false;

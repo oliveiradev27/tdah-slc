@@ -27,7 +27,15 @@
 		{
 			 	$("#mensagem p").text("Bem Vindo ").append("<strong>"+usuario+"</strong>!");
 			 	$("#mensagem small").text("");
-			 	$("#mensagem").dialog();
+			 	$("#mensagem").dialog({
+					 show: { effect: 'fade', speed: '500' },
+           			 hide: { effect: 'fade', speed: '1500' },
+					buttons: {
+                		OK: function() {
+                   		 $(this).dialog("close");
+                		}
+					}
+				 });
 			 	$('#login').val("");
 			 	$('#password').val("");
 		}

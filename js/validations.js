@@ -12,7 +12,7 @@ function MascaraCep(cep) {
     if (mascaraInteiro(cep) == false) {
         event.returnValue = false;
     }
-    return formataCampo(cep, '00.000-000', event);
+    return formataCampo(cep, '00000-000', event);
 }
 
 //adiciona mascara de data
@@ -48,21 +48,11 @@ function ValidaTelefone(tel) {
 
 //valida CEP
 function ValidaCep(cep) {
-    exp = /\d{2}\.\d{3}\-\d{3}/
-    if (!exp.test(cep.value)) {
-        $("#mensagem p").text("CEP inválido!");
-        $("#mensagem small").text("Por favor, insirá um CEP válido.");
-        $("#mensagem").dialog({
-            show: { effect: 'fade', speed: '1500' },
-            hide: { effect: 'fade', speed: '1000' },
-            buttons: {
-                OK: function() {
-                    $('input[name="valor"]').focus();
-                    $(this).dialog("close");
-                }
-            }
-        });
-    }
+    exp = /\d{5}\-\d{3}/
+    if (!exp.test(cep.value))
+        return false;
+    else
+        return true;
 }
 
 //valida data
@@ -136,19 +126,9 @@ function ValidarCNPJ(ObjCnpj) {
     dig2 = (((dig2 % 11) < 2) ? 0 : (11 - (dig2 % 11)));
 
     if (((dig1 * 10) + dig2) != digito) {
-        $('#concluir').prop('disabled', true);
-        $("#mensagem p").text("CNPJ inválido!");
-        $("#mensagem small").text("Por favor, insirá um CNPJ válido.");
-        $("#mensagem").dialog({
-            show: { effect: 'fade', speed: '1500' },
-            hide: { effect: 'fade', speed: '1000' },
-            buttons: {
-                OK: function() {
-                    $('input[name="valor"]').focus();
-                    $(this).dialog("close");
-                }
-            }
-        });
+        return false;
+    } else {
+        return true;
     }
 
 }
