@@ -181,7 +181,6 @@ jQuery(document).ready(function($) {
                         hide : {effect: 'fade', speed: '1000'},
                         buttons: {
                             OK: function() {
-                                $('input[name="valor"]').focus();
                                 $(this).dialog("close");
                             }
                         }
@@ -194,7 +193,6 @@ jQuery(document).ready(function($) {
                         hide : {effect: 'fade', speed: '1000'},
                         buttons: {
                             OK: function() {
-                                $('input[name="valor"]').focus();
                                 $(this).dialog("close");
                             }
                         }
@@ -252,7 +250,7 @@ jQuery(document).ready(function($) {
         function verificarForm()
         {
             var id = $('#id').val();
-            if( id != "" && id != null)
+            if( id != "" || id > 0)
             {
                 console.log($('#id').val() );
                 $("#mensagem p").text("Deseja realizar outro cadastro?");
