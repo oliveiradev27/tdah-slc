@@ -118,6 +118,7 @@ function mascaraInteiro() {
 
 //valida o CNPJ digitado
 function ValidarCNPJ(ObjCnpj) {
+    $('#concluir').prop('disabled', false);
     var cnpj = ObjCnpj.value;
     var valida = new Array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
     var dig1 = new Number;
@@ -135,6 +136,7 @@ function ValidarCNPJ(ObjCnpj) {
     dig2 = (((dig2 % 11) < 2) ? 0 : (11 - (dig2 % 11)));
 
     if (((dig1 * 10) + dig2) != digito) {
+        $('#concluir').prop('disabled', true);
         $("#mensagem p").text("CNPJ inválido!");
         $("#mensagem small").text("Por favor, insirá um CNPJ válido.");
         $("#mensagem").dialog({

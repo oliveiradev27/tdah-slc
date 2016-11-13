@@ -30,7 +30,7 @@ include('header.php');
                    </div>
 
                    <div style="float: right;width: 360px;">
-
+                       <input type="hidden" name="id" id="id" value="">
                        <input type="text" name="empresa" class="tmp_p tmp_w" required value="" placeholder="Nome da Empresa" style="border: 1px solid">
                        <div class="ClearBox"></div>
                        <input type="date" name="data" class="tmp_p tmp_w" required value="" placeholder="Data de Registro" style="width: 200px;border: 1px solid">
@@ -102,7 +102,7 @@ include('header.php');
 
                 <div class="ClearBox"></div>
 
-                <input type="button" name="avancar" class="concluir" value="Concluir"  >
+                <input type="button" name="avancar" id ="concluir" class="concluir" value="Concluir"  >
 
 
 
@@ -116,15 +116,13 @@ include('header.php');
     <div class="ClearBox"></div>
 </section>   <div class="ClearBox"></div>
 <?php include('footer.php') ?>
-<script type="text/javascript" src="../js/validations.js"/>
+<script type="text/javascript" src="../js/validations.js"></script>
 <script type ="text/javascript">
-    jQuery(document).ready(function($) {      
-        $('.data').datepicker();
-        $('.submit_calen').on('click', function(event) {
-            event.preventDefault();
-            $('.data').focus();
-        });
-
+jQuery(document).ready(function($) {
+        if($('#id').val() != "")
+        {
+            $('.ava_pac :input').prop('disabled', true);
+        }
         $('.concluir').on('click', function(event) {
             event.preventDefault();
             console.log("passei aqui!");
@@ -147,14 +145,26 @@ include('header.php');
                    $("#mensagem small").text("Preencha as informações da instituicao.");
                    $("#mensagem").dialog({
                         show : {effect: 'fade', speed: '1500'},
-                        hide : {effect: 'fade', speed: '1000'}
+                        hide : {effect: 'fade', speed: '1000'},
+                        buttons: {
+                            OK: function() {
+                                $('input[name="valor"]').focus();
+                                $(this).dialog("close");
+                            }
+                        }
                     });
             } else if(cep == "" || logradouro == "" || cidade == "" || uf == ""){
                    $("#mensagem p").text("Preencha os campos obrigatórios!");
                    $("#mensagem small").text("Preencha as informações de endereço.");
                    $("#mensagem").dialog({
                         show : {effect: 'fade', speed: '1500'},
-                        hide : {effect: 'fade', speed: '1000'}
+                        hide : {effect: 'fade', speed: '1000'},
+                        buttons: {
+                            OK: function() {
+                                $('input[name="valor"]').focus();
+                                $(this).dialog("close");
+                            }
+                        }
                     });
             } else {
                 $.post("../controller/empresa.php",
@@ -177,14 +187,27 @@ include('header.php');
                             $("#mensagem small").text("Dados salvos na aplicação.");
                             $("#mensagem").dialog({
                                 show : {effect: 'fade', speed: '1500'},
-                                hide : {effect: 'fade', speed: '1000'}
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $('#id').val(data);
+                                        $(this).dialog("close");
+                                    }
+                                }
                             });
                         } else {
                             $("#mensagem p").text("Erro!");
                             $("#mensagem small").text("Não foi possivel salvar as informações.");
                             $("#mensagem").dialog({
                                 show : {effect: 'fade', speed: '1500'},
-                                hide : {effect: 'fade', speed: '1000'}
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    }
+                                }
                             });
                         } 
                     }
