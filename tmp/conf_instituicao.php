@@ -46,10 +46,10 @@ include('header.php');
                 <select class="tmp tmp_phone" name="documento" STYLE="width: 110px">
                     <option value="CNPJ" selected>CNPJ</option>
                 </select>
-                <input type="text" name="valor" class="tmp_p tmp_w" value="" >
+                <input type="text" name="valor" class="tmp_p tmp_w" value="" onBlur="ValidarCNPJ(ava_pac.valor);" onKeyPress="MascaraCNPJ(ava_pac.valor);" maxlength="14" >
                 <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
-                <input type="number" name="cep" maxlength="8" size="8" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" >
+                <input type="text" name="cep" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" onBlur="ValidaCep(ava_pac.cep)" >
                 <div class="ClearBoxli"></div>
                 <h3> Endereço</h3>
                 <input type="text" name="endereco" class="tmp_p tmp_w" value="" required style="width: 365px;font-weight: 500;padding: 0 3px" >
@@ -102,7 +102,7 @@ include('header.php');
 
                 <div class="ClearBox"></div>
 
-                <input type="submit" name="avancar" class="concluir" value="Concluir"  >
+                <input type="button" name="avancar" class="concluir" value="Concluir"  >
 
 
 
@@ -116,6 +116,7 @@ include('header.php');
     <div class="ClearBox"></div>
 </section>   <div class="ClearBox"></div>
 <?php include('footer.php') ?>
+<script type="text/javascript" src="../js/validations.js"/>
 <script type ="text/javascript">
     jQuery(document).ready(function($) {      
         $('.data').datepicker();

@@ -49,8 +49,20 @@ function ValidaTelefone(tel) {
 //valida CEP
 function ValidaCep(cep) {
     exp = /\d{2}\.\d{3}\-\d{3}/
-    if (!exp.test(cep.value))
-        alert('Numero de Cep Invalido!');
+    if (!exp.test(cep.value)) {
+        $("#mensagem p").text("CEP inválido!");
+        $("#mensagem small").text("Por favor, insirá um CEP válido.");
+        $("#mensagem").dialog({
+            show: { effect: 'fade', speed: '1500' },
+            hide: { effect: 'fade', speed: '1000' },
+            buttons: {
+                OK: function() {
+                    $('input[name="valor"]').focus();
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
 }
 
 //valida data
@@ -79,8 +91,20 @@ function ValidarCPF(Objcpf) {
     soma2 = (((soma2 + (2 * soma1)) * 10) % 11);
 
     var digitoGerado = (soma1 * 10) + soma2;
-    if (digitoGerado != digitoDigitado)
-        alert('CPF Invalido!');
+    if (digitoGerado != digitoDigitado) {
+        $("#mensagem p").text("CPF inválido!");
+        $("#mensagem small").text("Por favor, insirá um CPF válido.");
+        $("#mensagem").dialog({
+            show: { effect: 'fade', speed: '1500' },
+            hide: { effect: 'fade', speed: '1000' },
+            buttons: {
+                OK: function() {
+                    $('input[name="valor"]').focus();
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
 }
 
 //valida numero inteiro com mascara
@@ -110,8 +134,20 @@ function ValidarCNPJ(ObjCnpj) {
     dig1 = (((dig1 % 11) < 2) ? 0 : (11 - (dig1 % 11)));
     dig2 = (((dig2 % 11) < 2) ? 0 : (11 - (dig2 % 11)));
 
-    if (((dig1 * 10) + dig2) != digito)
-        alert('CNPJ Invalido!');
+    if (((dig1 * 10) + dig2) != digito) {
+        $("#mensagem p").text("CNPJ inválido!");
+        $("#mensagem small").text("Por favor, insirá um CNPJ válido.");
+        $("#mensagem").dialog({
+            show: { effect: 'fade', speed: '1500' },
+            hide: { effect: 'fade', speed: '1000' },
+            buttons: {
+                OK: function() {
+                    $('input[name="valor"]').focus();
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
 
 }
 
