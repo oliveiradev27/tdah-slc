@@ -38,9 +38,16 @@
 			echo json_encode($empresa->getEmpresaId());
 		else
 			echo json_encode(false);
+	
+	} else if(isset($_GET['cnpj'])) {
+		$cnpj = trim($_GET['cnpj']);
+		$empresaDao = new EmpresaDao();
+		if($empresaDao->buscarCNPJ($cnpj))
+			echo json_encode(true);
+		else
+			echo json_encode(false);
 	}else{
 		echo json_encode(false);
 	}
-
 
  ?>

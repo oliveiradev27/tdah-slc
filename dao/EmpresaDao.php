@@ -31,6 +31,19 @@ class EmpresaDao extends Conexao
 		else
 			return false;
 	}
+
+	public function buscarCNPJ($cnpj = null)
+	 {
+	 	if($cnpj)
+	 	{	
+	 		$registroDao = new RegistroDao();
+	 		if($registroDao->getRegistro($cnpj))
+	 			return true;
+	 		else 
+	 			return false;
+	 	}
+	 	return false; 
+	 } 
 }
 
 ?>

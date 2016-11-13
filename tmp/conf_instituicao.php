@@ -118,10 +118,12 @@ include('header.php');
 <?php include('footer.php') ?>
 <script type="text/javascript" src="../js/validations.js"></script>
 <script type ="text/javascript">
-jQuery(document).ready(function($) {
+    var retorno;
+    jQuery(document).ready(function($) {
+        
         $('.concluir').on('click', function(event) {
             event.preventDefault();
-            console.log("passei aqui!");
+            //console.log("passei aqui!");
             if(!verificarForm())
                 return false;
 
@@ -172,6 +174,8 @@ jQuery(document).ready(function($) {
                     return false;
              }
 
+
+
             if(empresa == "" ||  empresa == null || numeroDocumento == "" || dataRegistro == "")
             {
                    $("#mensagem p").text("Preencha os campos obrigatórios!");
@@ -198,6 +202,10 @@ jQuery(document).ready(function($) {
                         }
                     });
             } else {
+                console.log(verificaCNPJ(numeroDocumento));
+                if(retorno)
+                {
+
                 $.post("../controller/empresa.php",
                       { empresa         : empresa,
                         dataRegistro    : dataRegistro,
@@ -242,9 +250,21 @@ jQuery(document).ready(function($) {
                             });
                         }
                     }
-
                 );
+            } else {
+               $("#mensagem p").text("CNPJ já Cadastrado!");
+               $("#mensagem small").text("");
+               $("#mensagem").dialog({
+                   show : {effect: 'fade', speed: '1500'},
+                   hide : {effect: 'fade', speed: '1000'},
+                   buttons: {
+                       OK: function() {
+                           $(this).dialog("close");
+                       }
+                 }
+              });
             }
+          }
         });
 
         function verificarForm()
@@ -255,7 +275,7 @@ jQuery(document).ready(function($) {
                 console.log($('#id').val() );
                 $("#mensagem p").text("Deseja realizar outro cadastro?");
                 $("#mensagem small").text("Clique em Sim para iniciar com um novo cadastro.");
-                 $("#mensagem").dialog({
+                $("#mensagem").dialog({
                        show: { effect: 'fade', speed: '1500' },
                        hide: { effect: 'fade', speed: '1000' },
                        buttons: {
@@ -272,6 +292,28 @@ jQuery(document).ready(function($) {
             } else {
                 return true;
             }
+        }
+
+        function callback(valor)
+        {
+          window.retorno = valor;
+        }
+
+        function verificaCNPJ(cnpj) {
+                 
+            $.get("../controller/empresa.php?cnpj="+cnpj,
+                    function(data)
+                    { 
+                      data = JSON.parse(data);
+                      retorno = data;
+                      if(data == true)
+                      {
+                        callback(true);
+                      } else {
+                        callback(false);
+                      }
+                    }
+            );
         }
         
     });

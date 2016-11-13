@@ -6,7 +6,11 @@
 	if ($_SERVER['PHP_SELF'] != '/tdah') {
 		session_start();
 		if(!isset($_SESSION['usuario']))
+		{
+			session_destroy();
 			header("location: ../");
+		}
+			
 	}
 ?>
 <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
