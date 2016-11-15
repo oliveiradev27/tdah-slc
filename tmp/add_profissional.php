@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<?PHP
-/**
- * PROJETO TDAH - TADS ANHANGUERA 2015-2017
- */
-?>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
 <?php 
 $pagina['titulo'] = 'Profissional';
 include('header.php');
@@ -44,7 +34,8 @@ include('header.php');
                 <input type="text" name="telefones" class="tmp_p tmp_w" value=""  style="width: 200px">
                 <div class="ClearHr"><div class="icons_p"></div></div>
                 <h3> Filial</h3>
-                <input type="text" name="filia" class="tmp_p tmp_w" value="" style="width: 360px" >
+                <input type="hidden" name="empresa_id" id="empresa_id" class="tmp_p tmp_w" >
+                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" >
                 <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  >
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
@@ -91,17 +82,60 @@ include('header.php');
                 function(data)
                 {
                     data = JSON.parse(data);
-                    
+                    console.log(data);
+                    for(var i = 0; i < data.length; i++)
+                        $('#modal-table tbody').append("<tr id=\""+data[i].empresa_id +"\" style='font-size:9px'> id="+ data[i].cnpj +"><td>"
+                                                      + data[i].nome +"</td><td>"+ data[i].cnpj
+                                                      +"</td><td><button onclick=\"selecionaEmpresa("+ data[i].empresa_id +",'"+data[i].cnpj+" - "+ data[i].nome +"')\">+</button></td></tr>");
+                   $('#modal-table').dialog({
+                       show: { effect: 'fade', speed: '1500' },
+                       hide: { effect: 'fade', speed: '1000' },
+                       buttons: {
+                           OK: function() {
+                                 $('input[name="valor"]').focus();
+                                 $(this).dialog("close");
+                                 $('#modal-table tbody tr').remove();
+                             }
+                          },
+                      close: function() {
+                          $('#modal-table tbody tr').remove();
+                      }
+                   });
                 }
             );
 
         });
-    });
-  
+
+        $("#search-empresa").keyup(function(){
+            //pega o css da tabela 
+            //var tabela = $(this).attr('alt');
+            if( $(this).val() != ""){
+                $("#modal-table  tbody>tr").hide();
+                $("#modal-table  tbody>tr td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+            } else{
+                $("#modal-table  tbody>tr").show();
+            }
+        }); 
+
+        });
+        $.extend($.expr[":"], {
+        "contains-ci": function(elem, i, match, array) {
+            return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+        }
+
+  });
+    function selecionaEmpresa(id, cnpj)
+    {
+       $('#filial').val(cnpj);
+       $('#empresa_id').val(id);
+       $('#modal-table').dialog("close");
+       $('#modal-table tbody tr').remove();
+             
+    }
 </script>
-<div id="modal-table" title="Empresas" style="display:none; text-align:center;" >
-<input type="text" name="search-empresa" value="" placeholder="Buscar">
-<table border="0">
+<div id="modal-table" title="Empresas" style="max-height:200px !important; display:none; text-align:center;" >
+<input type="text" name="search-empresa" id="search-empresa" alt="lista-empresas" value="" placeholder="Buscar">
+<table border="0" style="width:100%" class="lista-empresas">
     <thead>
         <tr>
             <th>Nome</th>

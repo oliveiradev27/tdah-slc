@@ -50,7 +50,7 @@ class EmpresaDao extends Conexao
 		 if($id)
 		 {
 			 $query = $this->getConexao()->prepare('SELECT
-													 empresa.nome, registro.numero as "cnpj"
+													 empresa.empresa_id, empresa.nome, registro.numero as "cnpj"
 											   FROM
 											   		 empresa
 											   INNER JOIN
@@ -71,7 +71,7 @@ class EmpresaDao extends Conexao
 	 public function getAll()
 	 {
 		$query = $this->getConexao()->prepare('SELECT
-													 empresa.nome, registro.numero as "cnpj"
+													 empresa.empresa_id, empresa.nome, registro.numero as "cnpj"
 											   FROM
 											   		 empresa
 											   INNER JOIN
