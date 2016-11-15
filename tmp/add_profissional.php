@@ -18,7 +18,7 @@ include('header.php');
 
                        <input type="text" name="nome" placeholder="Digite o nome:" class="tmp_p tmp_w" value="" style="border: 1px solid">
                        <div class="ClearBox"></div>
-                       <input type="text" name="telefones" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
+                       <input type="date" name="data" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
                        <input type="button" name="localiza" class="submit_calen"  >
                    </div>
 
@@ -40,11 +40,18 @@ include('header.php');
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefones" >
-                        <option value="Celular">Celular </option>
-                        <option value="Celular2">Celular 2</option>
+                        <option value="Celular">Telefone</option>
+                        <option value="Celular2">Celular</option>
                     </select>
-                    <input type="text" name="telefones" class="tmp_p tmp_w" value="" >
-                    <input type="button" name="localiza" class="submit_more" >
+                    <input type="text" name="telefone1" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone1)" maxlength="15" >
+                    <input type="button" name="add-number" id="add-number" class="submit_more">
+                    <div class="toggle-number">
+                        <select class="tmp tmp_phone" name="telefones" >
+                            <option value="Celular">Telefone</option>
+                            <option value="Celular2">Celular</option>
+                        </select>
+                        <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
+                    </div>
                 </div>
                 <div class="ClearHr"><div class="icons_mail"></div></div>
                 <select class="tmp tmp_phone" name="email" >
@@ -65,6 +72,7 @@ include('header.php');
     <div class="ClearBox"></div>
 </section>   <div class="ClearBox"></div>
 <?php include('footer.php'); ?>
+<script  type="text/javascript" src="../js/validations.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function($){
         $('.submit_more').on('click', function(event) {
@@ -103,6 +111,27 @@ include('header.php');
                    });
                 }
             );
+
+        });
+
+        $('#add-number').on('click', function(){
+            var tel1 = $('input[name="telefone1"]').val();
+            if(tel1 != "")
+            {
+                $('.toggle-number').toggle();
+            } else {
+                $("#mensagem p").text("Preencha o número principal!");
+                 $("#mensagem small").text("");
+                 $("#mensagem").dialog({
+                        show: { effect: 'fade', speed: '1500' },
+                        hide: { effect: 'fade', speed: '1000' },
+                        buttons: {
+                            OK: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+            }
 
         });
 

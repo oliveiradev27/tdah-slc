@@ -1120,10 +1120,20 @@ nav[role="custom-dropdown"] ul>li:hover>a {
     font-family: sans-serif;
     border: 1px solid #000;
     border-radius: 0;
+    margin-bottom: 15px;
 }
 #search-empresa:active {
     border: #000;
 }
 #search-empresa:focus {
     border: #000;
+}
+#modal-table th {
+    font-family: sans-serif;
+}
+.toggle-number {
+    display: none;
+    transition: all 1.5s ease;
+    -moz-transition: all 1.5s ease;
+    -o-transition: all 1.5s ease;
 }
