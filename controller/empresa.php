@@ -46,7 +46,14 @@
 			echo json_encode(true);
 		else
 			echo json_encode(false);
-	}else{
+	} elseif (isset($_GET['get'])) {
+		$empresaDao = new EmpresaDao();
+		$id = $_GET['get'];
+		if($id == 'all' || $id == '')
+			echo json_encode($empresaDao->getAll());
+		else
+			echo json_encode($empresaDao->get($id));
+	} else {
 		echo json_encode(false);
 	}
 

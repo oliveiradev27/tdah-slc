@@ -43,7 +43,44 @@ class EmpresaDao extends Conexao
 	 			return false;
 	 	}
 	 	return false; 
-	 } 
+	 }
+
+	 public function get($id = null)
+	 {
+		 if($id)
+		 {
+			 $query = $this->getConexao()->prepare('SELECT
+													 empresa.nome, registro.numero as "cnpj"
+											   FROM
+											   		 empresa
+											   INNER JOIN
+											   		registro
+											   ON
+											   		empresa.registro_id = registro.registro_id
+											   WHERE
+											   		empresa_id = :id');
+			$query->bindValue(':id', $id, PDO::PARAM_INT);										   
+			return $this->executar($query)->fetch();
+
+		 } else {
+			 return $this->getAll();
+		 }
+
+	 }
+
+	 public function getAll()
+	 {
+		$query = $this->getConexao()->prepare('SELECT
+													 empresa.nome, registro.numero as "cnpj"
+											   FROM
+											   		 empresa
+											   INNER JOIN
+											   		registro
+											   ON
+											   		empresa.registro_id = registro.registro_id');
+
+			return $this->executar($query)->fetchAll();
+	 }
 }
 
 ?>

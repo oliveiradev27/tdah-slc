@@ -26,10 +26,10 @@ include('header.php');
 
                    <div style="float: right;width: 360px;">
 
-                       <input type="text" name="telefones" class="tmp_p tmp_w" value="" style="border: 1px solid">
+                       <input type="text" name="nome" placeholder="Digite o nome:" class="tmp_p tmp_w" value="" style="border: 1px solid">
                        <div class="ClearBox"></div>
                        <input type="text" name="telefones" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
-                       <input type="submit" name="localiza" class="submit_calen"  >
+                       <input type="button" name="localiza" class="submit_calen"  >
                    </div>
 
                </div>
@@ -37,7 +37,7 @@ include('header.php');
 
                 <div class="ClearBox"></div>
                 <select class="tmp tmp_phone" name="cat_registro" >
-                    <option >Registro </option>
+                    <option disabled selected>Registro </option>
                     <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
                 </select>
@@ -45,25 +45,22 @@ include('header.php');
                 <div class="ClearHr"><div class="icons_p"></div></div>
                 <h3> Filial</h3>
                 <input type="text" name="filia" class="tmp_p tmp_w" value="" style="width: 360px" >
-                <input type="submit" name="localiza" class="submit"  >
+                <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  >
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefones" >
                         <option value="Celular">Celular </option>
                         <option value="Celular2">Celular 2</option>
-                        <option value="Telefone">Telefone </option>
-                        <option value="Telefone2">Telefone 2 </option>
                     </select>
                     <input type="text" name="telefones" class="tmp_p tmp_w" value="" >
-                    <input type="submit" name="localiza" class="submit_more" >
+                    <input type="button" name="localiza" class="submit_more" >
                 </div>
                 <div class="ClearHr"><div class="icons_mail"></div></div>
                 <select class="tmp tmp_phone" name="email" >
-                    <option value="E-mail">E-mail </option>
-                    <option value="E-mail2">E-mail 2</option>
+                    <option value="E-mail" selected>E-mail </option>
                 </select>
                 <input type="text" name="email" class="tmp_p tmp_w" value="" >
-                <input type="submit" name="localiza" class="submit_more"  >
+                <!--<input type="submit" name="localiza" class="submit_more"  >-->
                 <div class="ClearBox"></div>
                 <input type="submit" name="avancar" class="avancar" value="Continuar"  >
 
@@ -78,14 +75,42 @@ include('header.php');
 </section>   <div class="ClearBox"></div>
 <?php include('footer.php'); ?>
 <script type="text/javascript">
-    jQuery.('.submit_more').on('click', function(event) {
-        event.preventDefault();
-       jQuery('#info-contatos-tel').append('');
+    jQuery(document).ready(function($){
+        $('.submit_more').on('click', function(event) {
+            event.preventDefault();
+            $('#info-contatos-tel').append('');
+        });
+        $('#avancar').on('click', function(event) {
+            event.preventDefault();
+            var contatos = new [];
+            sessionStorage.setItem();
+        }); 
+
+        $('#localiza-empresa').on('click', function(event){
+            $.get('../controller/empresa.php?get=all',
+                function(data)
+                {
+                    data = JSON.parse(data);
+                    
+                }
+            );
+
+        });
     });
-    jQuery('#avancar').on('click', function(event) {
-        event.preventDefault();
-        var contatos = new [];
-        sessionStorage.setItem();
-    });   
+  
 </script>
+<div id="modal-table" title="Empresas" style="display:none; text-align:center;" >
+<input type="text" name="search-empresa" value="" placeholder="Buscar">
+<table border="0">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CNPJ</th>
+        </tr>  
+    </thead>
+    <tbody>
+           
+    </tbody>
+</table>
+</div>
 </html>
