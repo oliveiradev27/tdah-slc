@@ -202,11 +202,51 @@ include('header.php');
                         }
                     });
             } else {
-                console.log(verificaCNPJ(numeroDocumento));
-                if(retorno)
-                {
+                verificaCNPJ(numeroDocumento);
+            }
+        });
 
-                $.post("../controller/empresa.php",
+        function verificarForm()
+        {
+            var id = $('#id').val();
+            if( id != "" || id > 0)
+            {
+                console.log($('#id').val() );
+                $("#mensagem p").text("Deseja realizar outro cadastro?");
+                $("#mensagem small").text("Clique em Sim para iniciar com um novo cadastro.");
+                $("#mensagem").dialog({
+                       show: { effect: 'fade', speed: '1500' },
+                       hide: { effect: 'fade', speed: '1000' },
+                       buttons: {
+                            Sim: function() {
+                                  location.reload();
+                            },
+                            Cancelar: function() {
+                                 $(this).dialog("close");
+                                 return false;                            
+                        }
+                   }
+             });
+             
+            } else {
+                return true;
+            }
+        }
+
+        function inserir()
+        {
+            var empresa         = $('[name="empresa"]').val();
+            var dataRegistro    = $('[name="data"]').val();
+            var documento       = $('[name="documento"]').val();
+            var numeroDocumento = $('[name="valor"]').val();
+            var cep             = $('[name="cep"]').val();
+            var logradouro      = $('[name="endereco"]').val();
+            var complemento     = $('[name="complemento"]').val();
+            var bairro          = $('[name="bairro"]').val();
+            var numero          = $('[name="numero"]').val();
+            var cidade          = $('[name="cidade"]').val();
+            var uf              = $('[name="estado"]').val(); 
+             $.post("../controller/empresa.php",
                       { empresa         : empresa,
                         dataRegistro    : dataRegistro,
                         documento       : documento,
@@ -251,69 +291,31 @@ include('header.php');
                         }
                     }
                 );
-            } else {
-               $("#mensagem p").text("CNPJ já Cadastrado!");
-               $("#mensagem small").text("");
-               $("#mensagem").dialog({
-                   show : {effect: 'fade', speed: '1500'},
-                   hide : {effect: 'fade', speed: '1000'},
-                   buttons: {
-                       OK: function() {
-                           $(this).dialog("close");
-                       }
-                 }
-              });
-            }
-          }
-        });
-
-        function verificarForm()
-        {
-            var id = $('#id').val();
-            if( id != "" || id > 0)
-            {
-                console.log($('#id').val() );
-                $("#mensagem p").text("Deseja realizar outro cadastro?");
-                $("#mensagem small").text("Clique em Sim para iniciar com um novo cadastro.");
-                $("#mensagem").dialog({
-                       show: { effect: 'fade', speed: '1500' },
-                       hide: { effect: 'fade', speed: '1000' },
-                       buttons: {
-                            Sim: function() {
-                                  location.reload();
-                            },
-                            Cancelar: function() {
-                                 $(this).dialog("close");
-                                 return false;                            
-                        }
-                   }
-             });
-             
-            } else {
-                return true;
-            }
-        }
-
-        function callback(valor)
-        {
-          window.retorno = valor;
         }
 
         function verificaCNPJ(cnpj) {
-                 
-            $.get("../controller/empresa.php?cnpj="+cnpj,
-                    function(data)
-                    { 
-                      data = JSON.parse(data);
-                      retorno = data;
-                      if(data == true)
-                      {
-                        callback(true);
-                      } else {
-                        callback(false);
-                      }
-                    }
-            );
+            $.get("../controller/empresa.php?cnpj="+cnpj)
+             .done(function(data){
+                data = JSON.parse(data);
+                //retorno = data;
+                if(data == true)
+                {
+                    $("#mensagem p").text("CNPJ já Cadastrado!");
+                    $("#mensagem small").text("");
+                    $("#mensagem").dialog({
+                        show : {effect: 'fade', speed: '1500'},
+                        hide : {effect: 'fade', speed: '1000'},
+                        buttons: {
+                            OK: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                } else {
+                  inserir();
+                }     
+
+            });
         }
         
     });
