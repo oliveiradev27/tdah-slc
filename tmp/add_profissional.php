@@ -79,7 +79,7 @@ include('header.php');
             event.preventDefault();
             $('#info-contatos-tel').append('');
         });
-        $('#avancar').on('click', function(event) {
+        $('#avancar').submit(function(event) {
             event.preventDefault();
             var contatos = new [];
             sessionStorage.setItem();
@@ -91,10 +91,16 @@ include('header.php');
                 {
                     data = JSON.parse(data);
                     console.log(data);
-                    for(var i = 0; i < data.length; i++)
-                        $('#modal-table tbody').append("<tr id=\""+data[i].empresa_id +"\" style='font-size:9px'> id="+ data[i].cnpj +"><td>"
-                                                      + data[i].nome +"</td><td>"+ data[i].cnpj
-                                                      +"</td><td><button onclick=\"selecionaEmpresa("+ data[i].empresa_id +",'"+data[i].cnpj+" - "+ data[i].nome +"')\">+</button></td></tr>");
+                    var html = "";
+                    for(var i = 0; i < data.length; i++) {
+                        html += "<tr id=\""+data[i].empresa_id +"\" style='font-size:9px'>id="+ data[i].cnpj +">";
+                        html +=     "<td>"+ data[i].nome +"</td>";
+                        html +=     "<td>"+ data[i].cnpj +"</td>";
+                        html +=     "<td><button onclick=\"selecionaEmpresa("+ data[i].empresa_id +",'"+data[i].cnpj+" - "+ data[i].nome +"')\">Selecionar</button></td>";
+                        html += "</tr>";
+                    }
+                        
+                        $('#modal-table tbody').append(html);
                    $('#modal-table').dialog({
                        show: { effect: 'fade', speed: '1500' },
                        hide: { effect: 'fade', speed: '1000' },
@@ -116,9 +122,11 @@ include('header.php');
 
         $('#add-number').on('click', function(){
             var tel1 = $('input[name="telefone1"]').val();
-            if(tel1 != "")
+            if(tel1 != "" && $('.toggle-number').css('display') == "none")
             {
                 $('.toggle-number').toggle();
+            }else if(tel1 != "" && $('.toggle-number').css('display') != "none") {
+
             } else {
                 $("#mensagem p").text("Preencha o número principal!");
                  $("#mensagem small").text("");
