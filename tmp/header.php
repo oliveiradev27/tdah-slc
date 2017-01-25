@@ -29,7 +29,9 @@
 			<nav role="custom-dropdown">
 				<input type="checkbox" id="button">
 				<label for="button" onclick><div class="Link icon_p" ><a href="../tmp/"><?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a></div></label>
-				<div class="linkPainel icon_p" ><a href="../tmp/"><?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a></div>
+				<div class="linkPainel icon_p" >
+					<a href="../tmp/"><?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a>
+				</div>
 				<ul>
 					<li class="add"><a href="../tmp/add_profissional.php">Adicionar Profissional</a></li>
 					<li class="add1"><a href="../tmp/add_responsavel.php">Adicionar Responsável</a></li>
