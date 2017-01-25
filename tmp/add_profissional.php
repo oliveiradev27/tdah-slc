@@ -165,8 +165,7 @@ include('header.php');
        $('#filial').val(cnpj);
        $('#empresa_id').val(id);
        $('#modal-table').dialog("close");
-       $('#modal-table tbody tr').remove();
-             
+       $('#modal-table tbody tr').remove();            
     }
 </script>
 <div id="modal-table" title="Empresas" style="max-height:200px !important; display:none; text-align:center;" >

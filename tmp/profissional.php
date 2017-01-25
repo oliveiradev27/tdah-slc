@@ -9,8 +9,14 @@
 <!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <?php
+ if(!isset($_POST['nome']))
+    header("location: add_profissional.php");
+
  $pagina['titulo'] = 'Profissional';
- include('header.php'); ?>
+ include('header.php');
+ $data = new DateTime($_POST['data']);
+ $data = $data->format('d/m/Y');
+ ?>
 <section>
     <article>
 
@@ -25,31 +31,26 @@
 
                     <div style="float: right;width: 360px;">
 
-                        <input type="text" name="telefones" class="tmp_p" value="Andrea Voltar">
+                        <input type="text" name="nome" class="tmp_p" value="<?php echo $_POST['nome']?>" readonly>
                         <div class="ClearBox"></div>
-                        <input type="text" name="telefones" class="tmp_p" value="01/01/0001" style="width: 200px;">
+                        <input type="date" name="data_nascimento" class="tmp_p" value="<?php echo $_POST['data'] ?>" style="width: 200px;">
                         <input type="submit" name="localiza" class="submit_calen"  >
                     </div>
 
                 </div>
-
-
                 <div class="ClearBox"></div>
                 <select class="tmp tmp_phone" name="cat_registro" >
-                    <option >Registro </option>
-                    <option value="CRP" selected>CRP</option>
+                    <option disabled >Registro</option>
+                    <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
                 </select>
-                <input type="text" name="telefones" class="tmp_p" value="00000"  style="width: 200px">
+                <input type="text" name="registro" class="tmp_p" value="<?php echo $_POST['registro'] ?>"  style="width: 200px">
                 <div class="ClearHr"><div class="icons_con"></div></div>
-                <select class="tmp tmp_phone" name="email" STYLE="width: 110px">
-                    <option>Documento </option>
-                    <option value="CPF">CPF</option>
-                    <option value="RG">RG</option>
+                <select class="tmp tmp_phone" name="tipo_documento" STYLE="width: 110px">
+                    <option value="CPF" selected>CPF</option>
                 </select>
-                <input type="text" name="email" class="tmp_p tmp_w" value="" >
-                <input type="submit" name="localiza" class="submit_more"  >
-                <div class="ClearHr"><div class="icons_hom"></div></div>
+                <input type="text" name="documento" class="tmp_p tmp_w" value="<?php echo $_POST['registro'] ?>" >
+                    <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
                 <input type="text" name="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
