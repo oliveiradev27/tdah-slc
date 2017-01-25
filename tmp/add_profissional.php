@@ -10,15 +10,11 @@ include('header.php');
                <div>
                    <div style="float: left;">
                         <img src="../img/people.png">
-
-
                    </div>
-
                    <div style="float: right;width: 360px;">
-
-                       <input type="text" name="nome" placeholder="Digite o nome:" class="tmp_p tmp_w" value="" style="border: 1px solid">
+                       <input type="text" name="nome" placeholder="Digite o nome:" class="tmp_p tmp_w" value="" style="border: 1px solid" required>
                        <div class="ClearBox"></div>
-                       <input type="date" name="data" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
+                       <input type="date" name="data" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid" required>
                        <input type="button" name="localiza" class="submit_calen"  >
                    </div>
 
@@ -26,17 +22,17 @@ include('header.php');
 
 
                 <div class="ClearBox"></div>
-                <select class="tmp tmp_phone" name="cat_registro" >
-                    <option disabled selected>Registro </option>
+                <select class="tmp tmp_phone" name="cat_registro" required>
+                    <option disabled selected>Registro</option>
                     <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
                 </select>
-                <input type="text" name="telefones" class="tmp_p tmp_w" value=""  style="width: 200px">
+                <input type="text" name="registro" class="tmp_p tmp_w" value=""  style="width: 200px" required>
                 <div class="ClearHr"><div class="icons_p"></div></div>
-                <h3> Filial</h3>
+                <h3>Filial</h3>
                 <input type="hidden" name="empresa_id" id="empresa_id" class="tmp_p tmp_w" >
-                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" >
-                <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  >
+                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" readonly required>
+                <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  title="Clique aqui para pesquisar as empresas cadastradas no sistema." >
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefones" >
@@ -44,7 +40,7 @@ include('header.php');
                         <option value="Celular2">Celular</option>
                     </select>
                     <input type="text" name="telefone1" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone1)" maxlength="15" >
-                    <input type="button" name="add-number" id="add-number" class="submit_more">
+                    <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
                         <select class="tmp tmp_phone" name="telefones" >
                             <option value="Celular">Telefone</option>
@@ -54,7 +50,7 @@ include('header.php');
                     </div>
                 </div>
                 <div class="ClearHr"><div class="icons_mail"></div></div>
-                <select class="tmp tmp_phone" name="email" >
+                <select class="tmp tmp_phone" name="contato-tipo" >
                     <option value="E-mail" selected>E-mail </option>
                 </select>
                 <input type="text" name="email" class="tmp_p tmp_w" value="" >
@@ -79,8 +75,11 @@ include('header.php');
             event.preventDefault();
             $('#info-contatos-tel').append('');
         });
-        $('#avancar').submit(function(event) {
-            event.preventDefault();
+
+        $('[name="avancar"]').on('submit', function(event) {
+            alert('Ever');
+            return false;
+           event.preventDefault();
             var contatos = new [];
             sessionStorage.setItem();
         }); 
@@ -100,7 +99,7 @@ include('header.php');
                         html += "</tr>";
                     }
                         
-                        $('#modal-table tbody').append(html);
+                   $('#modal-table tbody').append(html);
                    $('#modal-table').dialog({
                        show: { effect: 'fade', speed: '1500' },
                        hide: { effect: 'fade', speed: '1000' },

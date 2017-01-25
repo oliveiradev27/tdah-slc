@@ -50,15 +50,15 @@ class EmpresaDao extends Conexao
 		 if($id)
 		 {
 			 $query = $this->getConexao()->prepare('SELECT
-													 empresa.empresa_id, empresa.nome, registro.numero as "cnpj"
-											   FROM
-											   		 empresa
-											   INNER JOIN
-											   		registro
-											   ON
-											   		empresa.registro_id = registro.registro_id
-											   WHERE
-											   		empresa_id = :id');
+														 empresa.empresa_id, empresa.nome, registro.numero as "cnpj"
+											   		FROM
+											   			 empresa
+											   		INNER JOIN
+											   			registro
+											  		ON
+											   			empresa.registro_id = registro.registro_id
+											 		WHERE
+											   			empresa_id = :id');
 			$query->bindValue(':id', $id, PDO::PARAM_INT);										   
 			return $this->executar($query)->fetch();
 
