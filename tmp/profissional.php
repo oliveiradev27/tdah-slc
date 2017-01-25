@@ -39,7 +39,7 @@
 
                 </div>
                 <div class="ClearBox"></div>
-                <select class="tmp tmp_phone" name="cat_registro" >
+                <select class="tmp tmp_phone" name="cat_registro" > 
                     <option disabled >Registro</option>
                     <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
