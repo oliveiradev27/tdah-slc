@@ -19,16 +19,11 @@ include('header.php');
 
         <div class="boxMain">
             <form name="ava_pac" method="post" action="index.php" >
-
-
-                <div class="ClearBox"></div>
+               <div class="ClearBox"></div>
                <div>
                    <div style="float: left;">
                         <img src="../img/instituicao.gif">
-
-
                    </div>
-
                    <div style="float: right;width: 360px;">
                        <input type="hidden" name="id" id="id" value="">
                        <input type="text" name="empresa" class="tmp_p tmp_w" required value="" placeholder="Nome da Empresa" style="border: 1px solid">
@@ -36,13 +31,8 @@ include('header.php');
                        <input type="date" name="data" class="tmp_p tmp_w" required value="" placeholder="Data de Registro" style="width: 200px;border: 1px solid">
                        <input type="button" name="localiza" class="submit_calen"  >
                    </div>
-
                </div>
- 
-
-
-                <div class="ClearBox"></div>
-              
+                <div class="ClearBox"></div>              
                 <select class="tmp tmp_phone" name="documento" STYLE="width: 110px">
                     <option value="CNPJ" selected>CNPJ</option>
                 </select>

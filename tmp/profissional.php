@@ -15,22 +15,19 @@
  $pagina['titulo'] = 'Profissional';
  include('header.php');
  $data = new DateTime($_POST['data']);
+
  $data = $data->format('d/m/Y');
  ?>
 <section>
     <article>
-
         <div class="boxMain">
             <form name="ava_pac" method="post" action="index.php" >
                 <div>
                     <div style="float: left;">
                         <img src="../img/people.png">
-
-
                     </div>
 
                     <div style="float: right;width: 360px;">
-
                         <input type="text" name="nome" class="tmp_p" value="<?php echo $_POST['nome']?>" readonly>
                         <div class="ClearBox"></div>
                         <input type="date" name="data_nascimento" class="tmp_p" value="<?php echo $_POST['data'] ?>" style="width: 200px;">
@@ -51,8 +48,8 @@
                 </select>
                 <input type="text" name="documento" class="tmp_p tmp_w" value="<?php echo $_POST['registro'] ?>" >
                     <div class="ClearHr"><div class="icons_hom"></div></div>
-                <h3> CEP</h3>
-                <input type="text" name="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" >
+                <h3>CEP</h3>
+                <input type="text" name="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" >
                 <div class="ClearBoxli"></div>
                 <h3> Endereço</h3>
                 <input type="text" name="endereco" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" >
@@ -75,10 +72,6 @@
                 <div class="ClearBox"></div>
 
                 <input type="submit" name="avancar" class="concluir" value="Concluir"  >
-
-
-
-
                 <div class="ClearBox"></div>
             </form>
         </div>
@@ -89,4 +82,5 @@
 </section>
 <div class="ClearBox"></div>
 <?php include('footer.php'); ?>
+<script type="text/javascript" src="../js/validations.js"></script>
 </html>

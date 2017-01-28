@@ -31,7 +31,7 @@ include('header.php');
                 <div class="ClearHr"><div class="icons_p"></div></div>
                 <h3>Filial</h3>
                 <input type="hidden" name="empresa_id" id="empresa_id" class="tmp_p tmp_w" >
-                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" readonly required>
+                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" required>
                 <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  title="Clique aqui para pesquisar as empresas cadastradas no sistema." >
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
@@ -76,13 +76,10 @@ include('header.php');
             $('#info-contatos-tel').append('');
         });
 
-        $('[name="avancar"]').on('submit', function(event) {
-            alert('Ever');
-            return false;
-           event.preventDefault();
-            var contatos = new [];
-            sessionStorage.setItem();
-        }); 
+        $('#filial').focus(function(){
+           $('#localiza-empresa').click()
+                                 .focus();
+        });
 
         $('#localiza-empresa').on('click', function(event){
             $.get('../controller/empresa.php?get=all',
