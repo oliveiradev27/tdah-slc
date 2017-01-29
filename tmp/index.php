@@ -17,9 +17,10 @@
 </section>
 <?php include('footer.php') ?>
 <script type="text/javascript">
-	var referrer = document.referrer.toString();
-	console.log(referrer);
-	referrer = referrer.localeCompare("http://localhost:8080/tdah-slc/index.php");
+	var referrer = "";
+	<?php $referer = (strpos($_SERVER['HTTP_REFERER'], 'tdah-slc/index.php')) ? 1 : 0 ?>
+	//referrer = referrer.localeCompare("http://localhost:8080/tdah-slc/index.php");
+	referer = <?php echo $referer ?>; 
 	sessionStorage.setItem("nome","<?php echo  $_SESSION['nome'] ?>");
 	jQuery(document).ready(function($) {
 		
@@ -39,7 +40,9 @@
 			 	$('#login').val("");
 			 	$('#password').val("");
 		}
+	//	if(referrer == 0 && sessionStorage.getItem("logado") != 1){
 		if(referrer == 0 && sessionStorage.getItem("logado") != 1){
+
 			sessionStorage.setItem("logado", 1);
 			bemVindo(sessionStorage.getItem("nome"));
 		}

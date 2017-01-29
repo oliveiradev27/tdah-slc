@@ -91,9 +91,4 @@ class Endereco
 		return $this->complemento;
 	}
 
-    public function __construct()
-    {
-        
-    }
-
 }

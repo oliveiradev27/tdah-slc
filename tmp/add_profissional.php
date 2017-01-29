@@ -53,7 +53,7 @@ include('header.php');
                 <select class="tmp tmp_phone" name="contato-tipo" >
                     <option value="E-mail" selected>E-mail </option>
                 </select>
-                <input type="text" name="email" class="tmp_p tmp_w" value="" >
+                <input type="email" name="email" class="tmp_p tmp_w" value="" required >
                 <!--<input type="submit" name="localiza" class="submit_more"  >-->
                 <div class="ClearBox"></div>
                 <input type="submit" name="avancar" class="avancar" value="Continuar"  >
