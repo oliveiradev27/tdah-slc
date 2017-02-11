@@ -46,7 +46,7 @@ jQuery(document).ready(function($) {
         } else {
             $.post("controller/login.php", { login: loginUsuario, password: senhaUsuario },
                 function(data) {
-                    data = JSON.parse(data);
+                    //data = JSON.parse(data);
                     if (data)
                         window.location.assign("tmp/");
                     else {

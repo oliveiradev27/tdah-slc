@@ -52,10 +52,10 @@
                     <input type="text" name="documento" class="tmp_p tmp_w" value="<?php echo $_POST['registro'] ?>" >
                         <div class="ClearHr"><div class="icons_hom"></div></div>
                     <h3>CEP</h3>
-                    <input type="text" name="cep" id ="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" >
+                    <input type="text" name="cep" id ="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" required >
                     <div class="ClearBoxli"></div>
                     <h3> Endereço</h3>
-                    <input type="text" name="endereco" id="endereco" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" >
+                    <input type="text" name="endereco" id="endereco" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" required >
                     <div class="ClearBoxli"></div>
                     <h3> Número</h3>
                     <input type="text" name="numero" id="numero" class="tmp_p tmp_w" value="" style="width: 100px;font-weight: 500;padding: 0 3px" >
@@ -70,7 +70,7 @@
                     <input type="text" name="cidade" id="cidade" class="tmp_p tmp_w" value="" style="width: 390px;font-weight: 500;padding: 0 3px" >
                     <div class="ClearBoxli"></div>
                     <h3> Estado</h3>
-                    <select class="tmp tmp_phone" name="estado" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;">
+                    <select class="tmp tmp_phone" name="estado" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;" required>
                         <option value="" disabled selected>----</option>
                         <option value="AC">Acre (AC)</option>
                         <option value="AL">Alagoas (AL)</option>
