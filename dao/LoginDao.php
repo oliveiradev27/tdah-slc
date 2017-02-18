@@ -48,10 +48,10 @@ class LoginDao extends Conexao
 
     public function logout()
     {
+		session_start();
     	if(isset($_SESSION['usuario']))
     	{
-    		unset($_SESSION['usuario']);
-            session_destroy();
+			session_destroy();
 			return true;
     	} else {
 			return false;

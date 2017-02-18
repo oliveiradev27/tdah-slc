@@ -237,17 +237,17 @@ include('header.php');
             var cidade          = $('[name="cidade"]').val();
             var uf              = $('[name="estado"]').val(); 
              $.post("../controller/empresa.php",
-                      { empresa         : empresa,
-                        dataRegistro    : dataRegistro,
-                        documento       : documento,
-                        numeroDocumento : numeroDocumento,
-                        cep             : cep,
-                        logradouro      : logradouro,
-                        complemento     : complemento,
-                        bairro          : bairro,
-                        numero          : numero,
-                        cidade          : cidade,
-                        uf              : uf
+                    { empresa         : empresa,
+                      dataRegistro    : dataRegistro,
+                      documento       : documento,
+                      numeroDocumento : numeroDocumento,
+                      cep             : cep,
+                      logradouro      : logradouro,
+                      complemento     : complemento,
+                      bairro          : bairro,
+                      numero          : numero,
+                      cidade          : cidade,
+                      uf              : uf
                     },
                     function(data) {
                         data = JSON.parse(data);

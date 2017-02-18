@@ -18,13 +18,22 @@
 
  $data = $data->format('d/m/Y');
 
- $empresa_id = $_POST['empresa_id'];
- echo $empresa_id;
+ $telefones = [];
+if(isset($_POST['telefone']) && !$_POST['telefone'] == null)
+    array_push($telefones, ['contato1' => [$_POST['telefone_tipo'],  $_POST['telefone']]]);
+if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
+ array_push($telefones, ['contato2' => [$_POST['telefone_tipo2'], $_POST['telefone2']]]);
+
+//print_r(json_encode($telefones));
  ?>
     <section>
         <article>
             <div class="boxMain">
                 <form name="ava_pac" method="post" action="../controller/profissional.php" >
+                    <input type="hidden" name="empresa_id" id="empresa_id" value="<?php echo $_POST['empresa_id'] ?>">
+                    <input type="hidden" name="telefones[]" id="telefones" value='<?php echo json_encode($telefones)?>'>
+                    <input type="hidden" name="email" id="email" value="<?php echo $_POST['email'] ?>";
+
                     <div>
                         <div style="float: left;">
                             <img src="../img/people.png">
@@ -49,13 +58,13 @@
                     <select class="tmp tmp_phone" name="tipo_documento" STYLE="width: 110px">
                         <option value="CPF" selected>CPF</option>
                     </select>
-                    <input type="text" name="documento" class="tmp_p tmp_w" value="<?php echo $_POST['registro'] ?>" >
+                    <input type="text" name="documento" id="cpf" class="tmp_p tmp_w" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14" value="" >
                         <div class="ClearHr"><div class="icons_hom"></div></div>
                     <h3>CEP</h3>
                     <input type="text" name="cep" id ="cep" class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" required >
                     <div class="ClearBoxli"></div>
                     <h3> Endereço</h3>
-                    <input type="text" name="endereco" id="endereco" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" required >
+                    <input type="text" name="logradouro" id="endereco" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" required >
                     <div class="ClearBoxli"></div>
                     <h3> Número</h3>
                     <input type="text" name="numero" id="numero" class="tmp_p tmp_w" value="" style="width: 100px;font-weight: 500;padding: 0 3px" >
@@ -70,7 +79,7 @@
                     <input type="text" name="cidade" id="cidade" class="tmp_p tmp_w" value="" style="width: 390px;font-weight: 500;padding: 0 3px" >
                     <div class="ClearBoxli"></div>
                     <h3> Estado</h3>
-                    <select class="tmp tmp_phone" name="estado" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;" required>
+                    <select class="tmp tmp_phone" name="uf" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;" required>
                         <option value="" disabled selected>----</option>
                         <option value="AC">Acre (AC)</option>
                         <option value="AL">Alagoas (AL)</option>
@@ -114,12 +123,12 @@
     </section>
     <div class="ClearBox"></div>
     <?php include('footer.php'); ?>
-    <script type="text/javascript" src="../js/validations.js" async></script>
+    <span id="cpf-validador"></span>    
+    <script type="text/javascript" src="../js/validations.js"></script>
     <script type="text/javascript">
         $('#cep').keyup(function(){
             var cep = $(this).val();
             if(cep.length == 9){
-                 alert('entrei!')
                 cep = cep.replace('-','');
                 console.log(cep);
                 $.getJSON("http://viacep.com.br/ws/"+cep+"/json/")
@@ -143,6 +152,118 @@
                 });
             }
         });
+
+        $('#cpf').keyup(function(){
+            var cpf = $(this).val();
+            console.log(cpf.length);
+            if(cpf.length == 14){
+                ValidarCPF(ava_pac.documento);
+            }
+        });
+
+        $('form[name="ava_pac"]').submit(function(event){
+          
+        });
+
+        function verificarCPF(cpf){
+            console.log(cpf.value);
+            var valido = ValidarCPF(cpf);
+            console.log(valido);
+            if(ValidarCPF(cpf)){
+                //console.log("entrou no else");
+                $.get('../controller/profissional.php?cpf='+cpf.value)
+                 .done(function(data){
+                    data = JSON.parse(data);
+                    //retorno = data;
+                    if(data == true)
+                    {
+                        $("#mensagem p").text("CPF já Cadastrado!");
+                        $("#mensagem small").text("");
+                        $("#mensagem").dialog({
+                            show : {effect: 'fade', speed: '1500'},
+                            hide : {effect: 'fade', speed: '1000'},
+                            buttons: {
+                                OK: function() {
+                                        $(this).dialog("close");
+                                         $('#cpf').val("")
+                                                  .focus();
+                                    }
+                                }
+                        });
+
+                        $('#cpf-validador').val("1");
+                     } else {
+                        $('#cpf-validador').val("0");
+                     }     
+                });
+            } else {
+               $('#cpf-validador').val("0");
+            }
+        }
+
+        function inserir(){
+            var nome       = $('[name="nome"]').val();
+            var documento  = [$('[name="tipo_documento"]').val(), $('[name="documento"]').val()];
+            var data       = $('[name="data_nascimento"]').val();
+            var empresa_id = $('[name = "empresa_id"]').val();
+            var telefones  = $('#telefones').val();
+            var logradouro = $('#endereco').val();
+            var bairro     = $('#bairro').val();
+            var numero     = $('#numero').val();
+            var cidade     = $('#cidade').val();
+            var uf         = $('#estado').val();
+            var cep        = $('#cep').val()
+            var registro  = [$('[name = "cat_registro"]').val(), $('[name = "registro"]')];
+            console.log(telefones);
+
+            $.post("../controller/profissional.php", 
+                  {
+                      nome            : nome,
+                      empresa_id      : empresa_id,
+                      dataNascimento  : data,
+                      registro        : JSON.stringify(registro),
+                      documento       : JSON.stringify(documento),
+                      telefones       : telefones,
+                      cep             : cep,
+                      logradouro      : logradouro,
+                      complemento     : complemento,
+                      bairro          : bairro,
+                      numero          : numero,
+                      cidade          : cidade,
+                      uf              : uf
+                  }, function(data) {
+                    console.log("foi");
+                      data = JSON.parse(data);
+                        if(data){
+                            $('#id').val(data);
+                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                            }
+                        }
+                    );
+                  }
         
     </script>
 </html>

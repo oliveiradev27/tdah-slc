@@ -4,6 +4,7 @@
 * PROJETO TDAH - TADS ANHANGUERA 2015-2017
 */
 	session_start();
+	print_r($_SESSION['usuario']);
 	if(!isset($_SESSION['usuario']))
 	{
 		session_destroy();

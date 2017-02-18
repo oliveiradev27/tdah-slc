@@ -23,7 +23,7 @@ include('header.php');
 
                 <div class="ClearBox"></div>
                 <select class="tmp tmp_phone" name="cat_registro" required>
-                    <option disabled selected>Registro</option>
+                    <option value="">Registro</option>
                     <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
                 </select>
@@ -35,16 +35,16 @@ include('header.php');
                 <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  title="Clique aqui para pesquisar as empresas cadastradas no sistema." >
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
-                    <select class="tmp tmp_phone" name="telefones" >
-                        <option value="Celular">Telefone</option>
-                        <option value="Celular2">Celular</option>
+                    <select class="tmp tmp_phone" name="telefone_tipo" >
+                        <option value="telefone">Telefone</option>
+                        <option value="celular">Celular</option>
                     </select>
-                    <input type="text" name="telefone1" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone1)" maxlength="15" >
+                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" >
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
-                        <select class="tmp tmp_phone" name="telefones" >
-                            <option value="Celular">Telefone</option>
-                            <option value="Celular2">Celular</option>
+                        <select class="tmp tmp_phone" name="telefone_tipo2" >
+                            <option value="telefone2">Telefone</option>
+                            <option value="celular2">Celular</option>
                         </select>
                         <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
                     </div>

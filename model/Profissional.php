@@ -10,7 +10,10 @@ class Profissional
 			$nome,
 			$cpf,
 			$registro,
+            $email,
 			$login,
+            $dataNascimento,
+            $empresa_id,
 			$endereco;
 
 	//Esse método é usado para realizar os imports automáticos na classe
@@ -50,12 +53,21 @@ class Profissional
     	$this->cpf = $cpf;
     }
 
-    public function getRegistro()
+    public function getDataNascimento()
+    {
+    	return $this->dataNascimento;
+    }
+
+    public function setDataNascimento( $dataNascimento )
+    {
+    	$this->dataNascimento = $dataNascimento;
+    }
+    public function getRegistroId()
     {
     	return $this->registro;
     }
 
-    public function setRegistro( $registro )
+    public function setRegistroId( $registro )
     {
     	$this->registro = $registro;
     }
@@ -70,14 +82,34 @@ class Profissional
     	$this->login = $login;
     }
 
-    public function getEndereco()
+    public function getEmail()
+    {
+    	return $this->email;
+    }
+
+    public function setEmail( $email )
+    {
+    	$this->email = $email;
+    }
+
+    public function getEnderecoId()
     {
     	return $this->endereco;
     }
 
-    public function setEndereco( $endereco )
+    public function setEnderecoId( $endereco )
     {
     	$this->endereco = $endereco;
+    }
+
+    public function getEmpresaId()
+    {
+    	return $this->empresa_id;
+    }
+
+    public function setEmpresaId( $empresa_id )
+    {
+    	$this->empresa_id = $empresa_id;
     }
 
 }

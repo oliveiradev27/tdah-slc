@@ -1,22 +1,35 @@
 <?php 
 require_once('../config/Conexao.php');
-class ProfissonalDao extends Conexao
-{
-	function __autoload( $classe )
-	{
-		if(file_exists('../model/'.$classe.'php'))
-			require_once('../model/'.$classe.'/php');
-	}
+require_once('/RegistroDao.php');
 
-	public function inserir($dados)
+class ProfissionalDao extends Conexao
+{
+
+	public function inserir($profissional)
 	{
-		if(is_array($dados))
-		{ 
 			//Configura variável de conexão
-			$con   = getConexao();
+			$con   = $this->getConexao();
+			$con->beginTransaction();
 			//Prepara a query que realizará o insert
-			$query = $con->prepare('INSERT');
-		}
+			$query = $con->prepare('INSERT INTO profissional
+										(nome, cpf,email ,data_nascimento, registro_id, endereco_id)
+									VALUES 
+										(:nome, :cpf, :email, :data_nascimento, :registro_id, :endereco_id)');
+			$query->bindValue(':nome', $profissional->getNome(), PDO::PARAM_STR);
+			$query->bindValue(':cpf', $profissional->getCpf(), PDO::PARAM_STR);
+			$query->bindValue(':email', $profissional->getEmail(), PDO::PARAM_STR);
+			$query->bindValue(':data_nascimento', $profissional->getDataNascimento(), PDO::PARAM_STR);
+			$query->bindValue(':endereco_id', $profissional->getEnderecoId(), PDO::PARAM_INT);
+			$query->bindValue(':registro_id', $profissional->getRegistroId(), PDO::PARAM_INT);
+			
+			if($query->execute()){
+				$con->commit();
+				return $this->getUltimoInserido();
+			}
+			else {
+				$con->rollback();
+				return false;
+			}
 	}
 
 	//Função encarregada de retornar os registros
@@ -76,6 +89,28 @@ class ProfissonalDao extends Conexao
 				return false;
 			}
 		}
+	}
+
+	public function getUltimoInserido()
+	{
+		$query = $this->getConexao()->prepare('SELECT profissional_id FROM profissional ORDER BY profissional_id DESC LIMIT 1');
+		$query = $this->executar($query);
+		if($query)
+			return $query->fetch()->profissional_id;
+		else
+			return false;
+	}
+
+	public function buscarCPF($cpf = null){
+		if($cpf)
+	 	{	
+	 		$registroDao = new RegistroDao();
+	 		if($registroDao->getRegistro($cpf))
+	 			return true;
+	 		else 
+	 			return false;
+	 	}
+	 	return false; 
 	}
 
 }

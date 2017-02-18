@@ -79,6 +79,7 @@ function ValidarCPF(Objcpf) {
     }
     soma1 = (((soma1 * 10) % 11) == 10 ? 0 : ((soma1 * 10) % 11));
     soma2 = (((soma2 + (2 * soma1)) * 10) % 11);
+    return true;
 
     var digitoGerado = (soma1 * 10) + soma2;
     if (digitoGerado != digitoDigitado) {
@@ -89,11 +90,16 @@ function ValidarCPF(Objcpf) {
             hide: { effect: 'fade', speed: '1000' },
             buttons: {
                 OK: function() {
-                    $('input[name="valor"]').focus();
+                    $('#cpf').val('');
                     $(this).dialog("close");
+                    return false;
                 }
             }
         });
+
+        return false;
+    } else {
+        return true;
     }
 }
 

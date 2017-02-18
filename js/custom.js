@@ -13,7 +13,8 @@ jQuery(document).ready(function($) {
                             data = JSON.parse(data)
                             console.log(data);
                             if (data == true) {
-                                sessionStorage.setItem("logado", 0);
+                                sessionStorage.removeItem("logado");
+                                sessionStorage.removeItem("nome");
                                 window.location.assign("../index.php");
                             }
 
@@ -47,7 +48,9 @@ jQuery(document).ready(function($) {
             $.post("controller/login.php", { login: loginUsuario, password: senhaUsuario },
                 function(data) {
                     //data = JSON.parse(data);
-                    if (data)
+                    console.log(data);
+                    if (data != 'false')
+                    //  console.log(data);
                         window.location.assign("tmp/");
                     else {
                         $("#mensagem p").text("Usuário não encontrado!");
