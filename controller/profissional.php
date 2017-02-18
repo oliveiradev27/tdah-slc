@@ -39,7 +39,7 @@
 		$profissionalDao = new ProfissionalDao();
 		$profissional->setId($profissionalDao->inserir($profissional));
 		$json = ['profissional' => $profissional, 'endereco' => $endereco, 'registro' => $registro];
-		$_POST['profissional'] = json_encode($json);
+		$_POST['profissional'] = json_encode($json); 
 		header("location: ../tmp/profissional.php");
 
 	} else if(isset($_GET['cpf'])) {
