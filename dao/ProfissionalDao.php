@@ -1,6 +1,6 @@
 <?php 
 require_once('../config/Conexao.php');
-require_once('/RegistroDao.php');
+require_once('RegistroDao.php');
 
 class ProfissionalDao extends Conexao
 {
@@ -113,4 +113,57 @@ class ProfissionalDao extends Conexao
 	 	return false; 
 	}
 
+	public function get( $id  = null)
+	{
+		if($id)
+		{
+			$query = $this->getConexao()->prepare('SELECT * 
+												  FROM
+												  		profissional
+												  INNER JOIN
+												  		endereco
+												  ON
+												  		profissional.endereco_id = endereco.endereco_id
+												 INNER JOIN
+												 	   registro
+												 ON
+												 		profissional.registro_id = registro.registro_id
+												 INNER JOIN
+												 	 	contato_profissional
+												 ON
+												 		profissional.profissional_id = contato_profissional.profissional_id
+												 WHERE
+												 		profissional.profissional_id = :id');
+			$query->bindValue(':id', $id, PDO::PARAM_INT);									
+			$query = $this->executar($query);
+			if($query)
+				return $query->fetch();
+			else
+			 	false;
+		} else {
+			return $this->getAll();
+		}
+	}
+
+	public function getAll()
+	{
+		   $query = $this->getConexao()->prepare('SELECT * 
+												  FROM
+												  		profissional
+												  INNER JOIN
+												  		endereco
+												  ON
+												  		profissional.endereco_id = endereco.endereco_id
+												 INNER JOIN
+												 	   registro
+												 ON
+												 		profissional.registro_id = registro.registro_id
+												 INNER JOIN
+												 	 	contato_profissional
+												 ON
+												 		profissional.profissional_id = contato_profissional.profissional_id');
+			$query = $this->executar($query);
+			if($query)
+				return $query->fetchAll();
+	}
 }

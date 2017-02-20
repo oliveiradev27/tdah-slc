@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<?PHP
+<?php
 /**
  * PROJETO TDAH - TADS ANHANGUERA 2015-2017
  */
@@ -9,20 +9,49 @@
 <!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <?php
- if(!isset($_POST['nome']))
-    header("location: add_profissional.php");
-
  $pagina['titulo'] = 'Profissional';
  include('header.php');
- $data = new DateTime($_POST['data']);
+ include('../dao/ProfissionalDao.php');
 
- $data = $data->format('d/m/Y');
+ $email         = "";
+ $registro      = "";
+ $nome          = "";
+ $data          = "";
+ $empresa_id    = "";
+ $registro      = "";
+ if(isset($_POST['nome']))
+ {
+    $data       = $_POST['data'];
+    $email      = $_POST['email'];
+    $nome       = $_POST['nome'];
+    $empresa_id = $_POST['empresa_id'];
+    $registro   = $_POST['registro'];
 
- $telefones = [];
-if(isset($_POST['telefone']) && !$_POST['telefone'] == null)
-    array_push($telefones, ['contato1' => [$_POST['telefone_tipo'],  $_POST['telefone']]]);
-if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
- array_push($telefones, ['contato2' => [$_POST['telefone_tipo2'], $_POST['telefone2']]]);
+    $telefones = [];
+    if(isset($_POST['telefone']) && !$_POST['telefone'] == null)
+        array_push($telefones, [$_POST['telefone_tipo'],  $_POST['telefone']]);
+    if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
+    array_push($telefones, [$_POST['telefone_tipo2'], $_POST['telefone2']]); 
+
+    $email = !isset($_POST['email']) ? $_POST['email']: "";
+
+ } else if(isset($_GET['id'])){
+    if(isset($_GET['novo']) && $_GET['novo'] == 1)
+        echo '<span id="novo"></span>';
+
+    $id = isset($_GET['id']) ? $_GET['id'] : 0;
+    if($id){
+        $profissionalDao = new ProfissionalDao();
+        $profissional = $profissionalDao->get($id);
+    //    if($profissional)
+           // print_r($profissional);
+    }
+
+} else {
+        header("location: add_profissional.php");
+}
+
+
 
 //print_r(json_encode($telefones));
  ?>
@@ -30,9 +59,9 @@ if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
         <article>
             <div class="boxMain">
                 <form name="ava_pac" method="post" action="../controller/profissional.php" >
-                    <input type="hidden" name="empresa_id" id="empresa_id" value="<?php echo $_POST['empresa_id'] ?>">
-                    <input type="hidden" name="telefones[]" id="telefones" value='<?php echo json_encode($telefones)?>'>
-                    <input type="hidden" name="email" id="email" value="<?php echo $_POST['email'] ?>";
+                    <input type="hidden" name="empresa_id" id="empresa_id" value="<?php echo $empresa_id?>">
+                    <input type="hidden" name="telefones" id="telefones" value='<?php echo json_encode($telefones)?>'>
+                    <input type="hidden" name="email" id="email" value="<?php echo $email ?>";
 
                     <div>
                         <div style="float: left;">
@@ -40,9 +69,9 @@ if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
                         </div>
 
                         <div style="float: right;width: 360px;">
-                            <input type="text" name="nome" class="tmp_p" value="<?php echo $_POST['nome']?>" readonly>
+                            <input type="text" name="nome" class="tmp_p" value="<?php echo $nome ?>" readonly>
                             <div class="ClearBox"></div>
-                            <input type="date" name="data_nascimento" class="tmp_p" value="<?php echo $_POST['data'] ?>" style="width: 200px;">
+                            <input type="date" name="data_nascimento" class="tmp_p" value="<?php echo $data ?>" style="width: 200px;">
                             <input type="submit" name="localiza" class="submit_calen"  >
                         </div>
 
@@ -53,7 +82,7 @@ if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
                         <option value="CRP">CRP</option>
                         <option value="CRM">CRM</option>
                     </select>
-                    <input type="text" name="registro" class="tmp_p" value="<?php echo $_POST['registro'] ?>"  style="width: 200px">
+                    <input type="text" name="registro" class="tmp_p" value="<?php echo $registro ?>"  style="width: 200px">
                     <div class="ClearHr"><div class="icons_con"></div></div>
                     <select class="tmp tmp_phone" name="tipo_documento" STYLE="width: 110px">
                         <option value="CPF" selected>CPF</option>

@@ -3,6 +3,8 @@
 	require_once("../dao/ProfissionalDao.php");
     require_once("../dao/EnderecoDao.php");
 	require_once("../dao/RegistroDao.php");
+	require_once("../dao/ContatoProfissionalDao.php");
+	require_once("../model/ContatoProfissional.php");
     require_once("../model/Profissional.php");
 	require_once("../model/Endereco.php");
 	require_once("../model/Registro.php");
@@ -38,9 +40,21 @@
 
 		$profissionalDao = new ProfissionalDao();
 		$profissional->setId($profissionalDao->inserir($profissional));
-		$json = ['profissional' => $profissional, 'endereco' => $endereco, 'registro' => $registro];
-		$_POST['profissional'] = json_encode($json); 
-		header("location: ../tmp/profissional.php");
+
+		$contatos = json_decode($_POST['telefones']);
+		foreach($contatos as $c)
+		{
+			$contato = new ContatoProfissional();
+			$contato->setTipo($c[0]);
+			$contato->setValor($c[1]); 
+			$contato->setProfissionalId($profissional->getId());
+
+			$contatoProfissionalDao = new ContatoProfissionalDao();
+			
+		}
+		$id = $profissional->getId();
+		//header("location: ../tmp/profissional.php?id=");
+		header("location: ../tmp/profissional.php?id=$id&novo=1");
 
 	} else if(isset($_GET['cpf'])) {
 		$cpf = trim($_GET['cpf']);
