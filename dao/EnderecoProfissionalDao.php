@@ -2,7 +2,7 @@
 
 require_once('../config/Conexao.php');
 require_once('../model/Endereco.php');
-class EnderecoDao extends Conexao
+class EnderecoProfissionalDao extends Conexao
 {
 	public function inserir($endereco)
 	{
@@ -35,6 +35,21 @@ class EnderecoDao extends Conexao
 			return false;
 	}
 
+    public function getPorProfissional($id)
+	{
+		$query = $this->getConexao()->prepare('SELECT
+                                                    *
+                                               FROM 
+                                                    endereco 
+                                                WHERE
+                                                    endereco_id = :id');
+		$query->bindValue(':id', $id, PDO::PARAM_INT);
+        $query = $this->executar($query);
+		if($query)
+			return $query->fetch();
+		else
+			return false;
+	}
 }
 
 

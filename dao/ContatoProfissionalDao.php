@@ -40,4 +40,20 @@ class ContatoProfissionalDao extends Conexao {
 			return false;
 	}
 
+    public function getPorProfissional($id)
+    {
+        $query = $this->getConexao()->prepare('SELECT 
+                                                    *
+                                               FROM 
+                                                    contato_profissional
+                                              WHERE
+                                                    profissional_id = :id');
+        $query->bindValue(':id', $id, PDO::PARAM_INT);                                            
+		$query = $this->executar($query);
+		if($query)
+			return $query->fetchAll();
+		else
+			return false;
+    }
+
 }

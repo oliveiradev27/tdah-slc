@@ -50,7 +50,7 @@
 			$contato->setProfissionalId($profissional->getId());
 
 			$contatoProfissionalDao = new ContatoProfissionalDao();
-			
+			$contatoProfissionalDao->inserir($contato);
 		}
 		$id = $profissional->getId();
 		header("location: ../tmp/profissional.php?id=$id");

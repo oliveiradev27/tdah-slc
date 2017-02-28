@@ -64,6 +64,7 @@ function ValidaData(data) {
 
 //valida o CPF digitado
 function ValidarCPF(Objcpf) {
+    console.log("entrei no evento");
     var cpf = Objcpf.value;
     exp = /\.|\-/g
     cpf = cpf.toString().replace(exp, "");
@@ -79,7 +80,6 @@ function ValidarCPF(Objcpf) {
     }
     soma1 = (((soma1 * 10) % 11) == 10 ? 0 : ((soma1 * 10) % 11));
     soma2 = (((soma2 + (2 * soma1)) * 10) % 11);
-    return true;
 
     var digitoGerado = (soma1 * 10) + soma2;
     if (digitoGerado != digitoDigitado) {
@@ -92,14 +92,13 @@ function ValidarCPF(Objcpf) {
                 OK: function() {
                     $('#cpf').val('');
                     $(this).dialog("close");
-                    return false;
                 }
             }
         });
 
-        return false;
-    } else {
-        return true;
+        //return false;
+        //} else {
+        //// return true;
     }
 }
 

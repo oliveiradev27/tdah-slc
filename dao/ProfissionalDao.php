@@ -1,7 +1,7 @@
 <?php 
 require_once('../config/Conexao.php');
 require_once('RegistroDao.php');
-
+require_once('EnderecoProfissionalDao.php');
 class ProfissionalDao extends Conexao
 {
 
@@ -101,16 +101,19 @@ class ProfissionalDao extends Conexao
 			return false;
 	}
 
-	public function buscarCPF($cpf = null){
-		if($cpf)
-	 	{	
-	 		$registroDao = new RegistroDao();
-	 		if($registroDao->getRegistro($cpf))
-	 			return true;
-	 		else 
-	 			return false;
-	 	}
-	 	return false; 
+	public function buscarCPF($cpf){
+		$query = $this->getConexao()->prepare('SELECT
+													 profissional_id 
+											   FROM 
+													 profissional 
+											   WHERE
+											   		cpf = :cpf');
+		$query->bindValue(':cpf', $cpf, PDO::PARAM_STR);											   
+		$query = $this->executar($query);
+		if($query)
+			return $query->fetch()->profissional_id;
+		else
+			return false;
 	}
 
 	public function get( $id  = null)
@@ -120,24 +123,23 @@ class ProfissionalDao extends Conexao
 			$query = $this->getConexao()->prepare('SELECT * 
 												  FROM
 												  		profissional
-												  INNER JOIN
-												  		endereco
-												  ON
-												  		profissional.endereco_id = endereco.endereco_id
 												 INNER JOIN
 												 	   registro
 												 ON
 												 		profissional.registro_id = registro.registro_id
-												 LEFT JOIN
-												 	 	contato_profissional
-												 ON
-												 		profissional.profissional_id = contato_profissional.profissional_id
 												 WHERE
 												 		profissional.profissional_id = :id');
 			$query->bindValue(':id', $id, PDO::PARAM_INT);									
 			$query = $this->executar($query);
+
+			$contatoProfissionalDao = new ContatoProfissionalDao();
+			$profissional = $query->fetch();
+			$profissional->contato  = $contatoProfissionalDao->getPorProfissional($profissional->profissional_id);
+		    
+			$enderecoProfissionalDao = new EnderecoProfissionalDao();
+			$profissional->endereco = $enderecoProfissionalDao->getPorProfissional($profissional->endereco_id);
 			if($query)
-				return $query->fetch();
+				return $profissional;
 			else
 			 	false;
 		} else {

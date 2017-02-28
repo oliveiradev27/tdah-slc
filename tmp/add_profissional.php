@@ -39,7 +39,7 @@ include('header.php');
                         <option value="telefone">Telefone</option>
                         <option value="celular">Celular</option>
                     </select>
-                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" >
+                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required>
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
                         <select class="tmp tmp_phone" name="telefone_tipo2" >

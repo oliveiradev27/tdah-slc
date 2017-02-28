@@ -1,16 +1,4 @@
-<!DOCTYPE html>
-<?php
-/**
- * PROJETO TDAH - TADS ANHANGUERA 2015-2017
- */
-?>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
-
-<?php
- 
+<?php 
  $pagina['titulo'] = 'Profissional';
  include('header.php');
  $profissional_id   = "";
@@ -20,6 +8,7 @@
  $data              = "";
  $empresa_id        = "";
  $registro          = "";
+ $telefones         = [];
  if(isset($_POST['nome']))
  {
     $data       = $_POST['data'];
@@ -28,7 +17,6 @@
     $empresa_id = $_POST['empresa_id'];
     $registro   = $_POST['registro'];
 
-    $telefones = [];
     if(isset($_POST['telefone']) && !$_POST['telefone'] == null)
         array_push($telefones, [$_POST['telefone_tipo'],  $_POST['telefone']]);
     if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
@@ -171,11 +159,9 @@
                         //console.log(dados);
                         $('#endereco').val(dados.logradouro);
                         $('#bairro').val(dados.bairro);
-                        $('#numero').val(dados.complemento);
+                        $('#complemento').val(dados.complemento);
                         $('#cidade').val(dados.localidade);
                         $('#estado').val(dados.uf);
-                    } else {
-                     
                     }
                }).fail(function(jqxhr, textStatus, error){
                     var erro = textStatus+ ' - '+ error;
@@ -187,15 +173,14 @@
         $('#cpf').keyup(function(){
             var cpf = $(this).val();
             console.log(cpf.length);
-            if(cpf.length == 14){
-                ValidarCPF(ava_pac.documento);
-            }
+            if(cpf.length == 14)
+                 ValidarCPF(ava_pac.documento);
+            
         });
 
         $('form[name="ava_pac"]').submit(function(event){
+            event.preventDefault();
             if($('#profissional_id').val() != ""){
-                event.preventDefault();
-                 var resposta = true;
                  $("#mensagem p").text("Deseja os atualizar os dados?");
                  $("#mensagem small").text("Clique em OK para Atualizar dados. Novo para iniciar com um novo cadastro.");
                  $("#mensagem").dialog({
@@ -219,7 +204,27 @@
                                 }
                             });
              } else {
-                 sessionStorage.setItem("novo", 1);
+
+                 $.get("../controller/profissional.php?cpf="+$('#cpf').val())
+                      .done(function(data){
+                            data = JSON.parse(data);
+                            if(data == true){
+                                $("#mensagem p").text("CPF já Cadastrado!");
+                                $("#mensagem small").text("");
+                                $("#mensagem").dialog({
+                                     show : {effect: 'fade', speed: '1500'},
+                                     hide : {effect: 'fade', speed: '1000'},
+                                     buttons: {
+                                        OK: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                sessionStorage.setItem("novo", 1);
+                                $('form[name="ava_pac"]').unbind('submit').submit();
+                            }
+                      });
              }            
         });
 
@@ -275,13 +280,13 @@
                     $('[name="data_nascimento"]').val(data.data_nascimento);
                     $('[name = "empresa_id"]').val();
                     $('#telefones').val();
-                    $('#endereco').val(data.logradouro);
-                    $('#bairro').val(data.bairro);
-                    $('#numero').val(data.numero);
-                    $('#complemento').val(data.complemento);
-                    $('#cidade').val(data.cidade);
-                    $('#estado').val(data.uf);
-                    $('#cep').val(data.cep);
+                    $('#endereco').val(data.endereco.logradouro);
+                    $('#bairro').val(data.endereco.bairro);
+                    $('#numero').val(data.endereco.numero);
+                    $('#complemento').val(data.endereco.complemento);
+                    $('#cidade').val(data.endereco.cidade);
+                    $('#estado').val(data.endereco.uf);
+                    $('#cep').val(data.endereco.cep);
                     $('[name = "cat_registro"]').val(data.tipo);
                     $('[name = "registro"]').val(data.numero);
                     if($('#novo').text() > 0){
