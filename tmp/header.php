@@ -1,14 +1,17 @@
-<!DOCTYPE html>
 <?php
-/**
-* PROJETO TDAH - TADS ANHANGUERA 2015-2017
-*/
 	session_start();
 	if(!isset($_SESSION['usuario']))
 	{
 		session_destroy();
 		header("location: ../");
 	}
+?>
+
+<!DOCTYPE html>
+<?php
+/**
+* PROJETO TDAH - TADS ANHANGUERA 2015-2017
+*/
 ?>
 <!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
 <!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
