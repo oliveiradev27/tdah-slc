@@ -128,7 +128,7 @@ class ProfissionalDao extends Conexao
 												 	   registro
 												 ON
 												 		profissional.registro_id = registro.registro_id
-												 INNER JOIN
+												 LEFT JOIN
 												 	 	contato_profissional
 												 ON
 												 		profissional.profissional_id = contato_profissional.profissional_id

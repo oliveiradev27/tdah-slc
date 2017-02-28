@@ -8,17 +8,18 @@
 <!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
 <!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
 <!--[if gt IE 8]><!-->
+
 <?php
+ 
  $pagina['titulo'] = 'Profissional';
  include('header.php');
- include('../dao/ProfissionalDao.php');
-
- $email         = "";
- $registro      = "";
- $nome          = "";
- $data          = "";
- $empresa_id    = "";
- $registro      = "";
+ $profissional_id   = "";
+ $email             = "";
+ $registro          = "";
+ $nome              = "";
+ $data              = "";
+ $empresa_id        = "";
+ $registro          = "";
  if(isset($_POST['nome']))
  {
     $data       = $_POST['data'];
@@ -33,20 +34,12 @@
     if(isset($_POST['telefone']) && !$_POST['telefone2'] == null)
     array_push($telefones, [$_POST['telefone_tipo2'], $_POST['telefone2']]); 
 
-    $email = !isset($_POST['email']) ? $_POST['email']: "";
+    $email = isset($_POST['email']) ? $_POST['email']: "";
 
  } else if(isset($_GET['id'])){
-    if(isset($_GET['novo']) && $_GET['novo'] == 1)
-        echo '<span id="novo"></span>';
+     $profissional_id = $_GET['id'];
 
     $id = isset($_GET['id']) ? $_GET['id'] : 0;
-    if($id){
-        $profissionalDao = new ProfissionalDao();
-        $profissional = $profissionalDao->get($id);
-    //    if($profissional)
-           // print_r($profissional);
-    }
-
 } else {
         header("location: add_profissional.php");
 }
@@ -59,9 +52,10 @@
         <article>
             <div class="boxMain">
                 <form name="ava_pac" method="post" action="../controller/profissional.php" >
+                    <input type="hidden" name="profissional_id" id="profissional_id" value="<?php echo $profissional_id ?>">
                     <input type="hidden" name="empresa_id" id="empresa_id" value="<?php echo $empresa_id?>">
                     <input type="hidden" name="telefones" id="telefones" value='<?php echo json_encode($telefones)?>'>
-                    <input type="hidden" name="email" id="email" value="<?php echo $email ?>";
+                    <input type="hidden" name="email" id="email" value="<?php echo $email ?>">
 
                     <div>
                         <div style="float: left;">
@@ -155,6 +149,14 @@
     <span id="cpf-validador"></span>    
     <script type="text/javascript" src="../js/validations.js"></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+            var novo = sessionStorage.getItem("novo");
+            if(novo == 1)
+                $('body').append('<span id="novo">'+$('#profissional_id').val()+'</span>');
+            buscar();
+            sessionStorage.removeItem('novo');
+        });
+
         $('#cep').keyup(function(){
             var cep = $(this).val();
             if(cep.length == 9){
@@ -191,7 +193,34 @@
         });
 
         $('form[name="ava_pac"]').submit(function(event){
-          
+            if($('#profissional_id').val() != ""){
+                event.preventDefault();
+                 var resposta = true;
+                 $("#mensagem p").text("Deseja os atualizar os dados?");
+                 $("#mensagem small").text("Clique em OK para Atualizar dados. Novo para iniciar com um novo cadastro.");
+                 $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                        $('form[name="ava_pac"]').unbind('submit').submit();
+                                    },
+                                    Novo: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                        window.location = "add_profissional.php";
+                                    },
+                                   Cancelar: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    },
+                                }
+                            });
+             } else {
+                 sessionStorage.setItem("novo", 1);
+             }            
         });
 
         function verificarCPF(cpf){
@@ -229,70 +258,51 @@
                $('#cpf-validador').val("0");
             }
         }
-
-        function inserir(){
-            var nome       = $('[name="nome"]').val();
-            var documento  = [$('[name="tipo_documento"]').val(), $('[name="documento"]').val()];
-            var data       = $('[name="data_nascimento"]').val();
-            var empresa_id = $('[name = "empresa_id"]').val();
-            var telefones  = $('#telefones').val();
-            var logradouro = $('#endereco').val();
-            var bairro     = $('#bairro').val();
-            var numero     = $('#numero').val();
-            var cidade     = $('#cidade').val();
-            var uf         = $('#estado').val();
-            var cep        = $('#cep').val()
-            var registro  = [$('[name = "cat_registro"]').val(), $('[name = "registro"]')];
-            console.log(telefones);
-
-            $.post("../controller/profissional.php", 
-                  {
-                      nome            : nome,
-                      empresa_id      : empresa_id,
-                      dataNascimento  : data,
-                      registro        : JSON.stringify(registro),
-                      documento       : JSON.stringify(documento),
-                      telefones       : telefones,
-                      cep             : cep,
-                      logradouro      : logradouro,
-                      complemento     : complemento,
-                      bairro          : bairro,
-                      numero          : numero,
-                      cidade          : cidade,
-                      uf              : uf
-                  }, function(data) {
-                    console.log("foi");
-                      data = JSON.parse(data);
-                        if(data){
-                            $('#id').val(data);
-                            $("#mensagem p").text("Cadastrado com Sucesso!");
-                            $("#mensagem small").text("Dados salvos na aplicação.");
-                            $("#mensagem").dialog({
-                                show : {effect: 'fade', speed: '1500'},
-                                hide : {effect: 'fade', speed: '1000'},
-                                buttons: {
-                                    OK: function() {
-                                        $('input[name="valor"]').focus();
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            });
-                        } else {
-                            $("#mensagem p").text("Erro!");
-                            $("#mensagem small").text("Não foi possivel salvar as informações.");
-                            $("#mensagem").dialog({
-                                show : {effect: 'fade', speed: '1500'},
-                                hide : {effect: 'fade', speed: '1000'},
-                                buttons: {
-                                    OK: function() {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            });
-                            }
-                        }
-                    );
-                  }
         
+        function buscar()
+        {
+            var id = $('#profissional_id').val();
+            if(id != ""){
+              $.get("../controller/profissional.php?id="+id,
+                function(data){
+                if(data)
+                {
+                    data = JSON.parse(data);
+                    console.log(data);
+                    $('[name="nome"]').val(data.nome);
+                    $('[name="tipo_documento"]').val();
+                    $('[name="documento"]').val(data.cpf);
+                    $('[name="data_nascimento"]').val(data.data_nascimento);
+                    $('[name = "empresa_id"]').val();
+                    $('#telefones').val();
+                    $('#endereco').val(data.logradouro);
+                    $('#bairro').val(data.bairro);
+                    $('#numero').val(data.numero);
+                    $('#complemento').val(data.complemento);
+                    $('#cidade').val(data.cidade);
+                    $('#estado').val(data.uf);
+                    $('#cep').val(data.cep);
+                    $('[name = "cat_registro"]').val(data.tipo);
+                    $('[name = "registro"]').val(data.numero);
+                    if($('#novo').text() > 0){
+                         $("#mensagem p").text("Cadastrado com Sucesso!");
+                         $("#mensagem small").text("Dados salvos na aplicação.");
+                         $("#mensagem").dialog({
+                                    show : {effect: 'fade', speed: '1500'},
+                                    hide : {effect: 'fade', speed: '1000'},
+                                    buttons: {
+                                        OK: function() {
+                                            $('input[name="valor"]').focus();
+                                            $(this).dialog("close");
+                                         }
+                                   }
+                        });
+
+                      $('#novo').remove();
+                    }
+                   }
+                });
+            }
+        }
     </script>
 </html>

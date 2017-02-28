@@ -53,8 +53,7 @@
 			
 		}
 		$id = $profissional->getId();
-		//header("location: ../tmp/profissional.php?id=");
-		header("location: ../tmp/profissional.php?id=$id&novo=1");
+		header("location: ../tmp/profissional.php?id=$id");
 
 	} else if(isset($_GET['cpf'])) {
 		$cpf = trim($_GET['cpf']);
@@ -63,6 +62,10 @@
 			echo json_encode(true);
 		else
 			echo json_encode(false);
+	} else if(isset($_GET['id'])) {
+		$id = $_GET['id'];
+		$profissionalDao = new ProfissionalDao();
+		echo json_encode($profissionalDao->get($id));
 	}
 
 
