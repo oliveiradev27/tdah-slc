@@ -111,7 +111,7 @@ class ProfissionalDao extends Conexao
 		$query->bindValue(':cpf', $cpf, PDO::PARAM_STR);											   
 		$query = $this->executar($query);
 		if($query)
-			return $query->fetch()->profissional_id;
+			return $query->fetch();
 		else
 			return false;
 	}
