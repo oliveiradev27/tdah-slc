@@ -32,10 +32,7 @@
         header("location: add_profissional.php");
 }
 
-
-
-//print_r(json_encode($telefones));
- ?>
+?>
     <section>
         <article>
             <div class="boxMain">
@@ -197,7 +194,7 @@
                                         $(this).dialog("close");
                                         window.location = "add_profissional.php";
                                     },
-                                   Cancelar: function() {
+                                    Cancelar: function() {
                                         $('input[name="valor"]').focus();
                                         $(this).dialog("close");
                                     },

@@ -168,4 +168,30 @@ class ProfissionalDao extends Conexao
 			if($query)
 				return $query->fetchAll();
 	}
+
+	public function alterar($profissional)
+	{
+			$con   = $this->getConexao();
+			$con->beginTransaction();
+			$query = $con->prepare('UPDATE
+										 profissional
+								   SET
+										nome = :nome, cpf = :cpf, email = :email,data_nascimento = :data_nascimento)
+								  WHERE
+								  		profissional_id = :id');
+			$query->bindValue(':id', $profissional->getId(), PDO::PARAM_INT);							  
+			$query->bindValue(':nome', $profissional->getNome(), PDO::PARAM_STR);
+			$query->bindValue(':cpf', $profissional->getCpf(), PDO::PARAM_STR);
+			$query->bindValue(':email', $profissional->getEmail(), PDO::PARAM_STR);
+			$query->bindValue(':data_nascimento', $profissional->getDataNascimento(), PDO::PARAM_STR);
+			
+			if($query->execute()){
+				$con->commit();
+				return true;
+			}
+			else {
+				$con->rollback();
+				return false;
+			}
+	}
 }

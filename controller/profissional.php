@@ -10,7 +10,7 @@
 	require_once("../model/Registro.php");
 
 
-	if(isset($_POST['nome']))
+	if(isset($_POST['nome']) && !isset($_POST['profissional_id']))
 	{
 		$registro = new Registro();
 		$registro->setTipo(trim($_POST['cat_registro']));
@@ -54,6 +54,10 @@
 		}
 		$id = $profissional->getId();
 		header("location: ../tmp/profissional.php?id=$id");
+
+	} else if(isset($_POST['profissional_id'])) {
+	
+		
 
 	} else if(isset($_GET['cpf'])) {
 		$cpf = trim($_GET['cpf']);
