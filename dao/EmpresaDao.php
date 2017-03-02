@@ -81,6 +81,7 @@ class EmpresaDao extends Conexao
 
 			return $this->executar($query)->fetchAll();
 	 }
+	 
 }
 
 ?>

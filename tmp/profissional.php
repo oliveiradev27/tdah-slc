@@ -8,6 +8,8 @@
  $data              = "";
  $empresa_id        = "";
  $registro          = "";
+ $endereco_id       = "";
+ $registro_id       = "";
  $telefones         = [];
  if(isset($_POST['nome']))
  {
@@ -41,6 +43,8 @@
                     <input type="hidden" name="empresa_id" id="empresa_id" value="<?php echo $empresa_id?>">
                     <input type="hidden" name="telefones" id="telefones" value='<?php echo json_encode($telefones)?>'>
                     <input type="hidden" name="email" id="email" value="<?php echo $email ?>">
+                    <input type="hidden" name="endereco_id" id="endereco_id" value="<?php echo $endereco_id?>">
+                    <input type="hidden" name="registro_id" id="registro_id" value="<?php echo $registro_id?>">
 
                     <div>
                         <div style="float: left;">
@@ -187,6 +191,7 @@
                                     OK: function() {
                                         $('input[name="valor"]').focus();
                                         $(this).dialog("close");
+                                        sessionStorage.setItem("novo", 1);
                                         $('form[name="ava_pac"]').unbind('submit').submit();
                                     },
                                     Novo: function() {
@@ -276,7 +281,7 @@
                     $('[name="documento"]').val(data.cpf);
                     $('[name="data_nascimento"]').val(data.data_nascimento);
                     $('[name = "empresa_id"]').val();
-                    $('#telefones').val();
+                    $('#telefones').val(JSON.stringify(data.contato));
                     $('#endereco').val(data.endereco.logradouro);
                     $('#bairro').val(data.endereco.bairro);
                     $('#numero').val(data.endereco.numero);
@@ -284,8 +289,13 @@
                     $('#cidade').val(data.endereco.cidade);
                     $('#estado').val(data.endereco.uf);
                     $('#cep').val(data.endereco.cep);
+                    $('#registro_id').val(data.registro_id);
+                    $('#empresa_id').val(data.empresa_id);
+                    $('#email').val(data.email);
+                    $('#endereco_id').val(data.endereco.endereco_id);
                     $('[name = "cat_registro"]').val(data.tipo);
                     $('[name = "registro"]').val(data.numero);
+
                     if($('#novo').text() > 0){
                          $("#mensagem p").text("Cadastrado com Sucesso!");
                          $("#mensagem small").text("Dados salvos na aplicação.");

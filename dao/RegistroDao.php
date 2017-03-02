@@ -37,6 +37,26 @@ class RegistroDao extends Conexao
 		else
 			return false;
 	}
+
+	public function alterar($registro)
+	{
+		$query = $this->getConexao()->prepare('UPDATE
+													registro
+											   SET
+											   		tipo = :tipo, numero = :numero
+											   WHERE
+													registro_id = :id');
+		$query->bindValue(':id', $registro->getRegistroId(),  PDO::PARAM_INT);
+		$query->bindValue(':tipo', $registro->getTipo(),  PDO::PARAM_STR);
+		$query->bindValue(':numero', $registro->getNumero(),  PDO::PARAM_STR);
+		$query = $this->executar($query);
+		if($query){
+		 	return true;
+		}
+		else
+			return false;
+	}
+
 }
 
 ?>

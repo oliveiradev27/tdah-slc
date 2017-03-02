@@ -12,16 +12,16 @@ class ProfissionalDao extends Conexao
 			$con->beginTransaction();
 			//Prepara a query que realizará o insert
 			$query = $con->prepare('INSERT INTO profissional
-										(nome, cpf,email ,data_nascimento, registro_id, endereco_id)
+										(nome, cpf,email ,data_nascimento, registro_id, endereco_id, empresa_id)
 									VALUES 
-										(:nome, :cpf, :email, :data_nascimento, :registro_id, :endereco_id)');
+										(:nome, :cpf, :email, :data_nascimento, :registro_id, :endereco_id, :empresa_id)');
 			$query->bindValue(':nome', $profissional->getNome(), PDO::PARAM_STR);
 			$query->bindValue(':cpf', $profissional->getCpf(), PDO::PARAM_STR);
 			$query->bindValue(':email', $profissional->getEmail(), PDO::PARAM_STR);
 			$query->bindValue(':data_nascimento', $profissional->getDataNascimento(), PDO::PARAM_STR);
 			$query->bindValue(':endereco_id', $profissional->getEnderecoId(), PDO::PARAM_INT);
 			$query->bindValue(':registro_id', $profissional->getRegistroId(), PDO::PARAM_INT);
-			
+			$query->bindValue(':empresa_id', $profissional->getEmpresaId(), PDO::PARAM_INT);
 			if($query->execute()){
 				$con->commit();
 				return $this->getUltimoInserido();
@@ -176,7 +176,7 @@ class ProfissionalDao extends Conexao
 			$query = $con->prepare('UPDATE
 										 profissional
 								   SET
-										nome = :nome, cpf = :cpf, email = :email,data_nascimento = :data_nascimento)
+										nome = :nome, cpf = :cpf, email = :email,data_nascimento = :data_nascimento
 								  WHERE
 								  		profissional_id = :id');
 			$query->bindValue(':id', $profissional->getId(), PDO::PARAM_INT);							  

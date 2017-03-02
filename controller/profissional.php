@@ -56,8 +56,53 @@
 		header("location: ../tmp/profissional.php?id=$id");
 
 	} else if(isset($_POST['profissional_id'])) {
+
+		$endereco = new Endereco();
+		$endereco->setEnderecoId(trim($_POST['endereco_id']));
+		$endereco->setLogradouro(trim($_POST['logradouro']));
+		$endereco->setCep(trim($_POST['cep']));
+		$endereco->setBairro(trim($_POST['bairro']));
+		$endereco->setComplemento(trim($_POST['complemento']));
+		$endereco->setUf(trim($_POST['uf']));
+		$endereco->setCidade(trim($_POST['cidade']));
+		$endereco->setNumero(trim($_POST['numero']));
+		$enderecoDao= new EnderecoDao();
+		$enderecoDao->alterar($endereco);
+
+		$registro = new Registro();
+		$registro->setRegistroId(trim($_POST['registro_id']));
+		$registro->setTipo(trim($_POST['cat_registro']));
+		$registro->setNumero(trim($_POST['registro']));
+		$registroDao = new registroDao();
+		$registroDao->alterar($registro);	
+
+		$contatos = json_decode($_POST['telefones']);
+		foreach($contatos as $c)
+		{
+			$contato = new ContatoProfissional();
+			$contato->setId($c->contato_id);
+			$contato->setTipo($c->tipo);
+			$contato->setValor($c->valor);
+
+			$contatoProfissionalDao = new ContatoProfissionalDao();
+			$contatoProfissionalDao->alterar($contato);
+		}		
 	
+		$profissional = new Profissional();
+		$profissional->setId($_POST['profissional_id']);
+		$profissional->setNome(trim($_POST['nome']));
+		$profissional->setDataNascimento(trim($_POST['data_nascimento']));
+		$profissional->setCpf(trim($_POST['documento']));
+		$profissional->setEmail(trim($_POST['email']));
+
+		$profissionalDao = new ProfissionalDao();
+		if($profissionalDao->alterar($profissional))
+			echo json_encode(true);
+		else
+			echo json_encode(false);
 		
+		$id = $profissional->getId();
+		header("location: ../tmp/profissional.php?id=$id");
 
 	} else if(isset($_GET['cpf'])) {
 		$cpf = trim($_GET['cpf']);

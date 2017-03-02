@@ -56,4 +56,24 @@ class ContatoProfissionalDao extends Conexao {
 			return false;
     }
 
+    public function alterar($contatoProfissional)
+    {
+        $query = $this->getConexao()->prepare('UPDATE
+                                                    contato_profissional 
+                                              SET
+                                                    tipo = :tipo, valor = :valor
+                                              WHERE
+                                                   contato_id = :id'
+                                             );
+        $query->bindValue(':tipo',  $contatoProfissional->getTipo(), PDO::PARAM_STR);
+        $query->bindValue(':valor', $contatoProfissional->getValor(), PDO::PARAM_STR);
+        $query->bindValue(':id',    $contatoProfissional->getId(), PDO::PARAM_INT);
+        
+        $query = $this->executar($query);
+        if($query){
+            return true;
+        } else 
+            return false;
+    }
+
 }

@@ -35,6 +35,30 @@ class EnderecoDao extends Conexao
 			return false;
 	}
 
+	public function alterar($endereco)
+	{
+		$query = $this->getConexao()->prepare('UPDATE
+													endereco 
+											   SET
+											   		logradouro = :logradouro, complemento = :complemento, numero = :numero, cep = :cep, bairro = :bairro, cidade = :cidade, uf = :uf
+											   WHERE	 
+													endereco_id = :id');
+		$query->bindValue(':id', $endereco->getEnderecoId(), PDO::PARAM_INT);											
+		$query->bindValue(':logradouro', $endereco->getLogradouro(), PDO::PARAM_STR);
+		$query->bindValue(':complemento', $endereco->getComplemento(), PDO::PARAM_STR);
+		$query->bindValue(':numero', $endereco->getNumero(), PDO::PARAM_INT);
+		$query->bindValue(':cep', $endereco->getCep(), PDO::PARAM_STR);
+		$query->bindValue(':bairro', $endereco->getBairro(), PDO::PARAM_STR);
+		$query->bindValue(':cidade', $endereco->getCidade(), PDO::PARAM_STR);
+		$query->bindValue(':uf', $endereco->getUf(), PDO::PARAM_STR);
+
+		$query = $this->executar($query);
+		if($query)
+			return true;
+		else
+			return false;
+	}
+
 }
 
 
