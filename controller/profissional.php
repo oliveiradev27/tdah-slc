@@ -110,10 +110,14 @@
 			echo json_encode(true);
 		else
 			echo json_encode(false);
-	} else if(isset($_GET['id'])) {
+	} else if(isset($_GET['id']) ) {
 		$id = $_GET['id'];
 		$profissionalDao = new ProfissionalDao();
-		echo json_encode($profissionalDao->get($id));
+		if(isset($_GET['single']) && $_GET['single']){
+			echo json_encode($profissionalDao->getBasico($id));			
+		} else {
+			echo json_encode($profissionalDao->get($id));
+		}
 	}
 
 

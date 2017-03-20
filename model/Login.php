@@ -59,5 +59,13 @@ class Login
     	$this->permissao = $permissao;
     }
 
+    public function getChave()
+    {
+    	return $this->chave;
+    }
 
+    public function setChave($chave)
+    {
+    	$this->chave = $chave;
+    }
 }

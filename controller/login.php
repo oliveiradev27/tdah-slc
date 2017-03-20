@@ -1,12 +1,24 @@
 <?php 
-
 	require_once('../dao/LoginDao.php');
-	if(isset($_POST['login']) && isset($_POST['password']))
+	require_once('../model/Login.php');
+
+	if(isset($_POST['profissional_id']))
+	{
+		$profissional_id = (int) $_POST['profissional_id'];
+		$login = new Login();
+		$login->setLogin(trim($_POST['login']));
+		$login->setSenha(trim($_POST['senha']));
+		$login->setPermissao(trim($_POST['permissao']));
+		$login->setChave(trim($_POST['chave']));
+
+		$loginDao = new loginDao();
+		echo json_encode($loginDao->inserir($login, $profissional_id));
+
+	} else if(isset($_POST['login']) && isset($_POST['password']))
 	{
 		$login = (string) trim($_POST['login']);
 		$senha = (string) trim($_POST['password']);
 		$loginDao = new LoginDao();
-		session_start();
 		$_SESSION['usuario'] = $loginDao->logar($login, $senha);
 		if($_SESSION['usuario'] && $_SESSION['usuario'] != "")
 		{

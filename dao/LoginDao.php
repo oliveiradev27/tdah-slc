@@ -1,16 +1,52 @@
 <?php 
-
-function __autoload( $classe )
-{
-	if(file_exists('../model/'. $classe.'.php'))
-			require_once('../model/'. $classe.'.php');
-	if(file_exists($classe.'.php'))
-			require_once( $classe.'.php');
-}
+session_start();
 
 require_once('../config/Conexao.php');
+require_once('../model/Login.php');
+require_once('../model/Profissional.php');
+require_once('ProfissionalDao.php');
+
 class LoginDao extends Conexao
 {
+	public function inserir(Login $login, $profissional_id)
+	{
+
+		$query = $this->getConexao()->prepare("INSERT INTO
+    												login (login, senha, permissao, chave)
+                                               VALUES 
+                                                    (:login, :senha, :permissao, :chave)");
+		$query->bindValue(':login', $login->getLogin(), PDO::PARAM_STR);
+		$query->bindValue(':senha', $login->getSenha(), PDO::PARAM_STR);											
+		$query->bindValue(':permissao',$login->getPermissao(), PDO::PARAM_STR);
+		$query->bindValue(':chave', $login->getChave(), PDO::PARAM_STR);
+		$query = $this->executar($query);
+   		if($query)
+    	{
+			$login->setId($this->getUltimoInserido());
+			$profissionalDao = new ProfissionalDao();
+			if($profissionalDao->alterarLogin($login, $profissional_id))
+    			return true;
+			else
+				return false;
+    	} else {
+    		$query = null;
+    		return false;
+    	}	
+
+	}
+
+	public function getUltimoInserido()
+	{
+		$query = $this->getConexao()->prepare('SELECT login_id FROM login ORDER BY login_id DESC LIMIT 1');
+		$query = $this->executar($query);
+		if($query)
+			return $query->fetch()->login_id;
+		else
+			return false;
+	}
+
+
+
     public function logar($login, $senha)
     {
     	$usuario = new Profissional();
@@ -48,7 +84,6 @@ class LoginDao extends Conexao
 
     public function logout()
     {
-		session_start();
     	if(isset($_SESSION['usuario']))
     	{
 			session_destroy();

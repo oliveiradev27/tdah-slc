@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<?PHP
-/**
- * PROJETO TDAH - TADS ANHANGUERA 2015-2017
- */
-?>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
-
 <?php 
 $pagina['titulo'] = 'Configuração';
 include('header.php');

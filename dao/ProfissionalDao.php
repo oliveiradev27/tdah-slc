@@ -194,4 +194,67 @@ class ProfissionalDao extends Conexao
 				return false;
 			}
 	}
+
+	public function alterarLogin($login, $profissional_id)
+	{
+		if(is_object($login))
+			$login = $login->getId();
+			$con   = $this->getConexao();
+			$con->beginTransaction();
+			$query = $con->prepare('UPDATE
+										profissional
+								   SET
+										login_id = :login_id
+								  WHERE
+								  		profissional_id = :id');
+			$query->bindValue(':id', $profissional_id, PDO::PARAM_INT);							  
+			$query->bindValue(':login_id', $login, PDO::PARAM_INT);
+			
+			if($query->execute()){
+				$con->commit();
+				return true;
+			}
+			else {
+				$con->rollback();
+				return false;
+			}
+		
+	}
+
+	 public function getBasico($id = null)
+	 {
+		 if($id)
+		 {
+			 $query = $this->getConexao()->prepare('SELECT
+														 profissional.profissional_id, profissional.nome, registro.tipo ,registro.numero
+											   		FROM
+											   			 profissional
+											   		INNER JOIN
+											   			registro
+											  		ON
+											   			profissional.registro_id = registro.registro_id
+											 		WHERE
+											   			profissional_id = :id');
+			$query->bindValue(':id', $id, PDO::PARAM_INT);										   
+			return $this->executar($query)->fetch();
+
+		 } else {
+			 return $this->getAllBasico();
+		 }
+
+	 }
+
+	 public function getAllBasico()
+	 {
+		$query = $this->getConexao()->prepare('SELECT
+												   profissional.profissional_id, profissional.nome, registro.tipo ,registro.numero
+											   	FROM
+											   	   profissional
+											    INNER JOIN
+											   		registro
+											  	ON
+											   		profissional.registro_id = registro.registro_id');
+
+			return $this->executar($query)->fetchAll();
+	 }
 }
