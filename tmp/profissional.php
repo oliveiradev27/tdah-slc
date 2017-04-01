@@ -156,8 +156,6 @@
                     if(!("erro" in dados))
                     {
                         console.log(dados);
-                        //dados = JSON.parse(dados);
-                        //console.log(dados);
                         $('#endereco').val(dados.logradouro);
                         $('#bairro').val(dados.bairro);
                         $('#complemento').val(dados.complemento);
@@ -166,7 +164,6 @@
                     }
                }).fail(function(jqxhr, textStatus, error){
                     var erro = textStatus+ ' - '+ error;
-                    //console.log(erro);
                 });
             }
         });

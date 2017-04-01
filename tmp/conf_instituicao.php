@@ -28,25 +28,25 @@ include('header.php');
                 <input type="text" name="valor" class="tmp_p tmp_w" value="" onKeyPress="MascaraCNPJ(ava_pac.valor);" maxlength="18" >
                 <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
-                <input type="text" name="cep" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" >
+                <input type="text" name="cep" id="cep" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="10" >
                 <div class="ClearBoxli"></div>
                 <h3> Endereço</h3>
-                <input type="text" name="endereco" class="tmp_p tmp_w" value="" required style="width: 365px;font-weight: 500;padding: 0 3px" >
+                <input type="text" name="endereco" id="endereco" class="tmp_p tmp_w" value="" required style="width: 365px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
                 <h3> Número</h3>
-                <input type="number" name="numero" maxlength="8" size="8" min="1" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" >
+                <input type="number" name="numero" id="numero" maxlength="8" size="8" min="1" class="tmp_p tmp_w" required value="" style="width: 110px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
                 <h3> Complemento</h3>
-                <input type="text" name="complemento" class="tmp_p tmp_w " required value="" style="width: 335px;font-weight: 500;padding: 0 3px" >
+                <input type="text" name="complemento" id="complemento" class="tmp_p tmp_w " required value="" style="width: 335px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
                 <h3> Bairro</h3>
-                <input type="text" name="bairro" class="tmp_p tmp_w" required value="" style="width: 395px;font-weight: 500;padding: 0 3px" >
+                <input type="text" name="bairro" id="bairro" class="tmp_p tmp_w" required value="" style="width: 395px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
                 <h3> Cidade</h3>
-                <input type="text" name="cidade" class="tmp_p tmp_w" required value="" style="width: 390px;font-weight: 500;padding: 0 3px" >
+                <input type="text" name="cidade" id="cidade" class="tmp_p tmp_w" required value="" style="width: 390px;font-weight: 500;padding: 0 3px" >
                 <div class="ClearBoxli"></div>
                 <h3> Estado</h3>
-                <select class="tmp tmp_phone" name="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;">
+                <select class="tmp tmp_phone" name="estado" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;">
                     <option value="" disabled selected>----</option>
                     <option value="AC">Acre (AC)</option>
                     <option value="AL">Alagoas (AL)</option>
@@ -72,8 +72,8 @@ include('header.php');
                     <option value="RO">Rondônia (RO)</option>
                     <option value="RR">Roraima (RR)</option>
                     <option value="SC">Santa Catarina (SC)</option>
-                    <option value="SE">São Paulo (SP)</option>
-                    <option value="SP">Sergipe (SE)</option>
+                    <option value="SP">São Paulo (SP)</option>
+                    <option value="SE">Sergipe (SE)</option>
                     <option value="TO">Tocantins (TO)</option>
                 </select>
                 <div class="ClearBoxli"></div>
@@ -296,6 +296,28 @@ include('header.php');
 
             });
         }
+
+        $('#cep').keyup(function(){
+            var cep = $(this).val();
+            if(cep.length == 9){
+                cep = cep.replace('-','');
+                console.log(cep);
+                $.getJSON("http://viacep.com.br/ws/"+cep+"/json/")
+                .done(function(dados){
+                    if(!("erro" in dados))
+                    {
+                        console.log(dados);
+                        $('#endereco').val(dados.logradouro);
+                        $('#bairro').val(dados.bairro);
+                        $('#complemento').val(dados.complemento);
+                        $('#cidade').val(dados.localidade);
+                        $('#estado').val(dados.uf);
+                    }
+               }).fail(function(jqxhr, textStatus, error){
+                    var erro = textStatus+ ' - '+ error;
+                });
+            }
+        });
         
     });
 
