@@ -7,13 +7,18 @@ include_once('header.php');
     <article>
 
         <div class="boxMain">
-            <form name="ava_pac" method="post" action="index.php" >
+            <form name="ava_pac" method="post" action="../controller/responsavel.php" >
+                <input type="hidden" name="responsavel_id" id="responsavel_id">
                 <div class="ClearBox"></div>
                 <h3>Nome:</h3>
-                <input type="text" name="nome" placeholder="Nome:" required class="tmp_p tmp_w" value=""  style="width: 390px">
+                <input type="text" name="nome" id="nome" placeholder="Nome:" required class="tmp_p tmp_w" value=""  style="width: 390px">
                 <div class="ClearBox"></div>
+                <h3>Data de nascimento:</h3>
+                <input type="date" name="data_nascimento" class="tmp_p" value="" style="width: 200px;">
+                <input type="button" name="localiza" class="submit_calen"  >
+                <div class="ClearHr"><div class="icons_t"></div></div>
                 <h3>CPF</h3>
-                <input type="text" name="cpf" placeholder="CPF:" required class="tmp_p tmp_w" value=""  style="width: 200px" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14">
+                <input type="text" name="cpf" id="cpf" placeholder="CPF:" required class="tmp_p tmp_w" value=""  style="width: 200px" onKeyPress="MascaraCPF(ava_pac.cpf);" maxlength="14">
                 <div class="ClearHr"><div class="icons_t"></div></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefone_tipo" >
@@ -24,15 +29,15 @@ include_once('header.php');
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
                         <select class="tmp tmp_phone" name="telefone_tipo2" >
-                            <option value="telefone2">Telefone</option>
-                            <option value="celular2">Celular</option>
+                            <option value="telefone">Telefone</option>
+                            <option value="celular">Celular</option>
                         </select>
                         <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
                     </div>
                 </div>
                 <div class="ClearHr"><div class="icons_mail"></div></div>
                 <h3>E-mail</h3>
-                <input type="email" name="email" placeholder="E-mail:" required class="tmp_p tmp_w" value="" >
+                <input type="email" name="email" id="email" placeholder="E-mail:" required class="tmp_p tmp_w" value="" >
                 <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
                 <input type="text" name="cep" id="cep" placeholder="00000-000" required class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" >
@@ -128,6 +133,13 @@ include_once('header.php');
 
         });
 
+        $('#cpf').keyup(function(){
+            var cpf = $(this).val();
+            console.log(cpf.length);
+            if(cpf.length == 14)
+                 ValidarCPF(ava_pac.cpf);
+            verificarCPF(cpf);
+        });
 
         $('#cep').keyup(function(){
             var cep = $(this).val();
@@ -150,5 +162,128 @@ include_once('header.php');
                 });
             }
         });
+
+        $('[name="ava_pac"]').submit(function(event){
+            event.preventDefault();
+
+            if($('#responsavel_id').val() == ""){
+             inserir();
+            } else {
+                $("#mensagem p").text("Deseja os atualizar os dados?");
+                $("#mensagem small").text("Clique em OK para Atualizar dados. Novo para iniciar com um novo cadastro.");
+                $("#mensagem").dialog({
+                               show : {effect: 'fade', speed: '1500'},
+                               hide : {effect: 'fade', speed: '1000'},
+                               buttons: {
+                                   OK: function() {
+                                       $('input[name="valor"]').focus();
+                                       $(this).dialog("close");
+                                       sessionStorage.setItem("novo", 1);
+                                       $('form[name="ava_pac"]').unbind('submit').submit();
+                                   },
+                                   Novo: function() {
+                                       $('input[name="valor"]').focus();
+                                       $(this).dialog("close");
+                                       window.location = "add_responsavel.php";
+                                   },
+                                   Cancelar: function() {
+                                       $('input[name="valor"]').focus();
+                                       $(this).dialog("close");
+                                   },
+                        }
+                 });
+            }
+        });
+
+        function inserir(){
+            var responsavel_id  = $('#responsavel_id').val();
+            var nome            = $('#nome').val();
+            var email           = $('#email').val();
+            var data            = $('[name="data_nascimento"]').val();
+            var cpf             = $('#cpf').val();
+            var cep             = $('#cep').val();
+            var endereco        = $('#endereco').val();
+            var numero          = $('#numero').val();
+            var bairro          = $('#bairro').val();
+            var complemento     = $('#complemento').val();
+            var cidade          = $('#cidade').val();
+            var estado          = $('#estado').val();
+            var contatos        = [
+                                    [$('[name="telefone_tipo"]').val(), $('[name="telefone"]').val()],
+                                    [$('[name="telefone_tipo2"]').val(), $('[name="telefone2"]').val()]
+                                  ];
+            contatos = JSON.stringify(contatos);
+            console.log(contatos);
+
+            $.post('../controller/responsavel.php',
+                    {
+                        responsavel_id  : responsavel_id,
+                        nome            : nome,
+                        cpf             : cpf,
+                        email           : email,
+                        data            : data,
+                        telefones       : contatos,
+                        cep             : cep,
+                        logradouro      : endereco,
+                        numero          : numero,
+                        bairro          : bairro,
+                        complemento     : complemento,
+                        cidade          : cidade,
+                        uf              : estado,
+                    },function(data, textStatus, xhr) {
+                        if(data){
+                            $('#responsavel_id').val(data);
+
+                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        }
+            });
+
+        }
+
+        function verificarCPF(cpf) {
+            $.get("../controller/responsavel.php?cpf="+cpf)
+                .done(function(data){
+                   data = JSON.parse(data);
+                   if(data == true){
+                       $("#mensagem p").text("CPF já Cadastrado!");
+                       $("#mensagem small").text("");
+                       $("#mensagem").dialog({
+                            show : {effect: 'fade', speed: '1500'},
+                            hide : {effect: 'fade', speed: '1000'},
+                            buttons: {
+                               OK: function() {
+                                   $(this).dialog("close");
+                                   $('#cpf').val('');
+                               }
+                           }
+                       });
+                   } 
+             });
+        }
+
     });
 </script>

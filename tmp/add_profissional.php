@@ -117,7 +117,7 @@ include('header.php');
         });
 
         $('#add-number').on('click', function(){
-            var tel1 = $('input[name="telefone1"]').val();
+            var tel1 = $('input[name="telefone"]').val();
             if(tel1 != "" && $('.toggle-number').css('display') == "none")
             {
                 $('.toggle-number').toggle();
