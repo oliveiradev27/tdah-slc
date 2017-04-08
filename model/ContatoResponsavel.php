@@ -12,3 +12,4 @@ class ContatoResponsavel extends Contato {
 		$this->responsavel_id = $responsavel_id;
 	}
 }
+?>

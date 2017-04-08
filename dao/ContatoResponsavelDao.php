@@ -1,5 +1,6 @@
 <?php 
 
+require_once('../config/Conexao.php');
 require_once('../model/ContatoResponsavel.php');
 
 class ContatoResponsavelDao extends Conexao {
@@ -56,18 +57,34 @@ class ContatoResponsavelDao extends Conexao {
 			return false;
     }
 
-    public function alterar(ContatoResponsavel $ContatoResponsavel)
+    public function alterar(ContatoResponsavel $contatoResponsavel)
     {
         $query = $this->getConexao()->prepare('UPDATE
                                                     contato_responsavel 
                                               SET
                                                     tipo = :tipo, valor = :valor
                                               WHERE
-                                                   contato_id = :id'
+                                                    contato_id = :id'
                                              );
-        $query->bindValue(':tipo',  $ContatoResponsavel->getTipo(), PDO::PARAM_STR);
-        $query->bindValue(':valor', $ContatoResponsavel->getValor(), PDO::PARAM_STR);
-        $query->bindValue(':id',    $ContatoResponsavel->getId(), PDO::PARAM_INT);
+        $query->bindValue(':tipo',  $contatoResponsavel->getTipo(), PDO::PARAM_STR);
+        $query->bindValue(':valor', $contatoResponsavel->getValor(), PDO::PARAM_STR);
+        $query->bindValue(':id',    $contatoResponsavel->getId(), PDO::PARAM_INT);
+        
+        $query = $this->executar($query);
+        if($query){
+            return true;
+        } else 
+            return false;
+    }
+
+    public function excluir($id)
+    {
+        $query = $this->getConexao()->prepare('DELETE
+                                                  contato_responsavel    
+                                              WHERE
+                                                  contato_id = :id'
+                                             );
+        $query->bindValue(':id',    $id, PDO::PARAM_INT);
         
         $query = $this->executar($query);
         if($query){
