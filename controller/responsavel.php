@@ -148,5 +148,9 @@
 		$responsavelDao = new ResponsavelDao();
 		$responsavel 	= $responsavelDao->get($_GET['id']);
 		echo json_encode($responsavel);
+	} else if(isset($_GET['nome'])) {
+		$responsavelDao = new ResponsavelDao();
+		$responsavel 	= $responsavelDao->getAllSingle();
+		echo json_encode($responsavel);
 	}
  ?>

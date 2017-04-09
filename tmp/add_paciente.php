@@ -1,44 +1,10 @@
-<!DOCTYPE html>
-<?PHP
-/**
- * PROJETO TDAH - TADS ANHANGUERA 2015-2017
- */
-?>
-<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!-->
-
-<html lang="pt-br">
-<!--<![endif]-->
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,  user-scalable=no, initial-scale=1">
-    <title>SLC - Painel</title>
-    <link href="../css/boilerplate.css" rel="stylesheet" type="text/css">
-    <link href="../css/style.css" rel="stylesheet" type="text/css">
-
-    <script src="../js/respond.min.js"></script>
-    <script>
-
-    </script>
-</head>
-<body>
-<header>
-    <nav role="custom-dropdown">
-        <input type="checkbox" id="button">
-        <label for="button" onclick><div class="Link icon_p" ><a href="javascript:window.history.go(-1)">Paciente</a></div></label>
-        <div class="linkPainel icon_p" ><a href="javascript:window.history.go(-1)">Paciente</a></div>
-        <ul>
-            <li class="add"><a href="../tmp/add_profissional.php">Adicionar Profissional</a></li>
-            <li class="add1"><a href="../tmp/add_responsavel.php">Adicionar Respons&aacute;vel</a></li>
-            <li class="add2"><a href="../tmp/add_paciente.php">Adicionar Paciente</a></li>
-            <li class="add3"><a href="../tmp/add_testes.php">Adicionar Testes</a></li>
-            <li class="add4"><a href="../tmp/rel_categorias.php">Relatorios</a></li>
-            <li class="add5"><a href="../tmp/config.php">Configura&ccedil;&otilde;es</a></li>
-            <li class="add6"><a href="../">Sair</a></li>
-        </ul></nav>
-</header>
+<?php 
+$pagina['titulo'] = 'Paciente';
+require_once('header.php');
+$paciente_id = "";
+if(isset($_GET['paciente_id']))
+    $paciente_id = $_GET['paciente_id'];
+ ?>
 <section>
     <article>
 
@@ -52,33 +18,32 @@
                     </div>
 
                     <div style="float: right;width: 360px;">
-
-                        <input type="text" name="telefones" class="tmp_p tmp_w" value="" style="border: 1px solid">
+                        <input type="hidden" name="responsavel_id" id="responsavel_id" value="<?php echo $responsavel_id ?>">
+                        <input type="text" name="nome"  id="nome" placeholder="Nome:" required class="tmp_p tmp_w" value="" style="border: 1px solid">
                         <div class="ClearBox"></div>
-                        <input type="text" name="telefones" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
-                        <input type="submit" name="localiza" class="submit_calen"  >
+                        <input type="date" name="data" id="data" required class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
+                        <input type="button" name="localiza" class="submit_calen"  >
                     </div>
 
                 </div>
-
-
                 <div class="ClearBox"></div>
-
                 <div class="ClearHr"><div class="icons_peo"></div></div>
-                <h3> Responsável</h3>
-                <input type="text" name="responsavel" class="tmp_p tmp_w" value="" style="width: 310px" >
-                <input type="submit" name="localiza" class="submit_cont"  >
-
-
-
-
                 <div class="ClearBox"></div>
-
+                <h3> Responsável</h3>
+                <select name="responsavel_id" id="responsavel_id" required class="tmp_p tmp_w" style="width: 310px">
+                <option value="" selected> ----- </option>
+                </select>
+                <input type="button" name="localiza" class="submit_cont" style="float: right;" >
+                <div class="ClearBox"></div>
+                <h3>Filiação</h3>
+                <select name="filiacao" id="filiacao" placeholder="Filiação" required class="tmp_p tmp_w" style="width: 370px">
+                    <option value=""> ----- </option>
+                    <option value="pai">Pai</option>
+                    <option value="mae">Mãe</option>
+                    <option value="outros">Outros</option>
+                </select>
+                <div class="ClearBox"></div>
                 <input type="submit" name="avancar" class="concluir" value="Concluir"  >
-
-
-
-
                 <div class="ClearBox"></div>
             </form>
         </div>
@@ -86,20 +51,100 @@
         <div class="ClearBox"></div>
     </article>
     <div class="ClearBox"></div>
+    <style>
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 34px;
+            border-bottom: 1px solid;
+            border-radius: 0px;
+            background: #fff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .select2-container--default .select2-selection--single {
+                background-color: #fff;
+                border: 0;
+                line-height: 34px;
+
+        }
+    </style>
 </section>   <div class="ClearBox"></div>
-<footer>
-    <div class="Prof">
-        <img src="../img/Id-Card-32.png" class="img_prof"/>
-        <p>
-            Dr. Paulo Mattos<br />
-            CRP 00000</p>
-    </div>
-    <div class="Pacien" style="display: none;">
-        <img src="../img/Male-User-32.png" class="img_prof"/>
-        <p>
-            Carlos Jose<br />
-            P 0000</p>
-    </div>
-</footer>
-</body>
-</html>
+<?php require_once('footer.php') ?>
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        carregaSelectResponsavel();
+        $('#responsavel_id').select2();
+
+
+        $('[name="ava_pac"]').on('submit', function(event) {
+            event.preventDefault();
+            var paciente_id = $('#paciente_id').val();
+            if (paciente_id == "")
+                inserir();     
+
+        });
+
+
+        function inserir() {
+             var responsavel_id         = $('#responsavel_id').val();
+            var nome                   = $('#nome').val();
+            var data                   = $('#data').val();
+            var descricao_filiacao     = $('#filiacao').val();
+
+            $.post('../controller/paciente.php',
+                     {
+                        responsavel_id     : responsavel_id,
+                        nome               : nome,
+                        data               : data,
+                        descricao_filiacao : descricao_filiacao
+                     },
+                      function (data, textStatus, xhr) {
+                      if (!(data in 'error')){
+                            data = JSON.parse(data);
+                            $('#paciente_id').val(data);
+                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                      } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                    }
+            });
+        }
+
+        function carregaSelectResponsavel() {
+            $.get('../controller/responsavel.php?nome')
+             .done(function(data){
+                if (data){
+                    data = JSON.parse(data);
+                    var html = "";
+                    var qtdResponsaveis = data.length-1;
+                    for (var i = 0; i < qtdResponsaveis; i++){
+                        html +=  '<option value="'+data[i].responsavel_id+'">';
+                        html +=     data[i].nome+' - '+data[i].cpf;
+                        html +=  '</option>';
+                    }
+
+                    $('#responsavel_id').append(html);
+                }
+             });
+        }
+    });    
+</script>

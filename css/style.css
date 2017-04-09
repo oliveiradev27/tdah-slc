@@ -6,6 +6,10 @@ video {
     max-width: 100%;
 }
 
+::-webkit-input-placeholder  { font-weight: bold; }
+input:-moz-placeholder  { font-weight: bold; }
+textarea:-moz-placeholder  { font-weight: bold; }
+
 
 /* O IE 6 não oferece suporte a largura máxima; por isso, o padrão de largura deve ser 100% */
 

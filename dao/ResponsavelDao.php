@@ -103,14 +103,38 @@ class ResponsavelDao extends Conexao
 
 	public function getAll()
 	{
-			$query = $this->getConexao()->prepare('SELECT * FROM responsavel');
+			$query = $this->getConexao()->prepare('SELECT 
+														responsavel_id, nome, cpf, email, data_nascimento, endereco_id AS endereco
+												   FROM
+												  		responsavel');
 			$query = $this->executar($query);
-			$responsavel = $query->fetch();
+			$responsaveis = $query->fetchAll();
 		    
 			$enderecoDao = new EnderecoDao();
-			$responsavel->endereco = $enderecoDao->get($responsavel->endereco_id);
+			$i = 0;
+			foreach ($responsaveis as $responsavel) {
+				$i++;
+				$responsavel->endereco = $enderecoDao->get($responsavel->endereco);
+				$responsaveis[$i] = $responsavel;
+			}
+			
 			if($query)
-				return $this->getAll();
+				return $responsaveis;
+			else
+			 	false;
+	}
+
+	public function getAllSingle()
+	{
+			$query = $this->getConexao()->prepare('SELECT 
+														responsavel_id, nome, cpf
+												   FROM
+												  		responsavel');
+			$query = $this->executar($query);
+			$responsaveis = $query->fetchAll();
+			
+			if($query)
+				return $responsaveis;
 			else
 			 	false;
 	}

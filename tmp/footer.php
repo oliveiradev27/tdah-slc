@@ -12,6 +12,7 @@
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/custom.js" async></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="../js/select2.min.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <div id="mensagem" title="Mensagem do Sistema" style="display:none; text-align:center;">
     <p>Usuário não encontrado!</p>

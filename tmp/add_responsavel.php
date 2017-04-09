@@ -32,7 +32,7 @@ if(isset($_GET['id']))
                         <option value="telefone">Telefone</option>
                         <option value="celular">Celular</option>
                     </select>
-                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required>
+                    <input type="text" name="telefone" class="tmp_p tmp_w" placeholder="(00) 00000-0000" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required>
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
                         <input type="hidden" name="telefone_id2" id="telefone_id2" value="">
@@ -40,7 +40,7 @@ if(isset($_GET['id']))
                             <option value="telefone">Telefone</option>
                             <option value="celular">Celular</option>
                         </select>
-                        <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
+                        <input type="text" name="telefone2" class="tmp_p tmp_w" placeholder="(00) 00000-0000" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
                     </div>
                 </div>
                 <div class="ClearHr"><div class="icons_mail"></div></div>
@@ -409,10 +409,9 @@ if(isset($_GET['id']))
                             $('#estado').val(data.endereco.uf);
                             $('#cidade').val(data.endereco.cidade);
                        } 
-                 });
-            }
+                });
 
-             $.get("../controller/contato_responsavel.php?responsavel_id="+responsavel_id)
+                $.get("../controller/contato_responsavel.php?responsavel_id="+responsavel_id)
                     .done(function(data){
                        data = JSON.parse(data);
                        if(data){
@@ -425,6 +424,7 @@ if(isset($_GET['id']))
                             }
                        }
                    });
+            }
         }
 
     });

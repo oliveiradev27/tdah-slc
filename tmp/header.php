@@ -25,6 +25,7 @@
 		<title>SLC - <?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "TDAH SLC" ?></title>
 		<link href="../css/boilerplate.css" rel="stylesheet" type="text/css">
 		<link href="../css/style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../css/select2.min.css">
 		<script src="../js/respond.min.js"></script>
 	</head>
 	<body>

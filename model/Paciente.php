@@ -1,22 +1,39 @@
 <?php
-defined( 'BASEPATH' ) OR exit( 'No direct script access allowed' );
 
 class Paciente
 {
 
 	private $id,
 			$nome,
-			$data_nascimento;
+			$dataNascimento;
 
-	public function save( $dados )
+	public function getPacienteId()
 	{
+		return $this->id;
 	}
 
-	public function delete( $id )
+	public function setPacienteId($id)
 	{
+		$this->id = $id;
 	}
 
-	public function edit( $dados )
+	public function getNome()
 	{
+		return $this->nome;
+	}
+
+	public function setNome($nome)
+	{
+		$this->nome = $nome;
+	}
+
+	public function getDataNascimento()
+	{
+		return $this->dataNascimento;
+	}
+
+	public function setDataNascimento($dataNascimento)
+	{
+		$this->dataNascimento = $dataNascimento;
 	}
 }
