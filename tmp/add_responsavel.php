@@ -119,13 +119,12 @@ if(isset($_GET['id']))
 
         buscar();
 
-
         $('#add-number').on('click', function(){
             var tel1 = $('input[name="telefone"]').val();
             if(tel1 != "" && $('.toggle-number').css('display') == "none")
             {
                 $('.toggle-number').toggle();
-            }else if(tel1 != "" && $('.toggle-number').css('display') != "none") {
+            } else if(tel1 != "" && $('.toggle-number').css('display') != "none") {
 
             } else {
                 $("#mensagem p").text("Preencha o número principal!");
@@ -345,6 +344,8 @@ if(isset($_GET['id']))
                                     OK: function() {
                                         $('input[name="valor"]').focus();
                                         $(this).dialog("close");
+                                        if($('[name="telefone2"]').val() == "" && $('.toggle-number').css('display') != "none")
+                                            $('.toggle-number').toggle();
                                     }
                                 }
                             });
@@ -407,10 +408,6 @@ if(isset($_GET['id']))
                             $('#complemento').val(data.endereco.complemento);
                             $('#estado').val(data.endereco.uf);
                             $('#cidade').val(data.endereco.cidade);
-                            $('[name="telefone_tipo"]').val();
-                            $('[name="telefone"]').val();
-                            $('[name="telefone_tipo2"]').val();
-                            $('[name="telefone2"]').val();
                        } 
                  });
             }
@@ -421,7 +418,7 @@ if(isset($_GET['id']))
                        if(data){
                             $('[name="telefone_tipo"]').val(data[0].tipo);
                             $('[name="telefone"]').val(data[0].valor);
-                            if(data.length > 0){
+                            if(data.length > 1){
                                 $('#add-number').click();
                                 $('[name="telefone_tipo2"]').val(data[1].tipo);
                                 $('[name="telefone2"]').val(data[1].valor);

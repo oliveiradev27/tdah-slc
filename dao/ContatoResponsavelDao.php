@@ -79,12 +79,12 @@ class ContatoResponsavelDao extends Conexao {
 
     public function excluir($id)
     {
-        $query = $this->getConexao()->prepare('DELETE
+        $query = $this->getConexao()->prepare('DELETE FROM
                                                   contato_responsavel    
                                               WHERE
                                                   contato_id = :id'
                                              );
-        $query->bindValue(':id',    $id, PDO::PARAM_INT);
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
         
         $query = $this->executar($query);
         if($query){

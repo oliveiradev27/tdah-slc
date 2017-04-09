@@ -84,21 +84,24 @@
 		$contatoResponsavelDao 	= new ContatoResponsavelDao();
 		$contatosExistentes		= $contatoResponsavelDao->getPorResponsavel($responsavel->getId());
 		$contatosNovos 			= json_decode($_POST['telefones']);
-
-		for ($i = 0; $i < count($contatosExistentes); $i++) {
+		$numeroDeContatos 		= count($contatosExistentes);
+		for ($i = 0; $i < $numeroDeContatos ; $i++) {
 			if ($contatosNovos[$i][0] == $contatosExistentes[$i]->tipo && $contatosNovos[$i][1] == $contatosExistentes[$i]->valor){
 				unset($contatosExistentes[$i]);
 				unset($contatosNovos[$i]);
 				continue;
 			}
-					
+
+			if ($contatosNovos[$i][1] == ""){
+				unset($contatosNovos[$i]);
+				continue;
+			}
 
 			$contato = new ContatoResponsavel();
 			$contato->setId($contatosExistentes[$i]->contato_id);
 			$contato->setTipo($contatosNovos[$i][0]);
 			$contato->setValor($contatosNovos[$i][1]); 
-			if(!$contatoResponsavelDao->alterar($contato))
-			{
+			if (!$contatoResponsavelDao->alterar($contato)) {
 				echo json_encode(false);
 				return;
 			} else {
@@ -107,14 +110,15 @@
 			}
 		}
 
-		if(count($contatosExistentes) > 0){
+		if (count($contatosExistentes) > 0){
 			$contatosExistentes = array_values($contatosExistentes);
+			print_r($contatosExistentes);
 			$contatoResponsavelDao->excluir($contatosExistentes[0]->contato_id);
 		}
 
-		if(count($contatosNovos) > 0){
+		if (count($contatosNovos) > 0){
 			$contatosNovos = array_values($contatosNovos);
-			if($contatosNovos[0][1] != ""){
+			if ($contatosNovos[0][1] != ""){
 				$contato = new ContatoResponsavel();
 				$contato->setTipo($contatosNovos[0][0]);
 				$contato->setValor($contatosNovos[0][1]); 
@@ -124,24 +128,23 @@
 			}
 		}
 
-
 		echo json_encode(true);
 
-	} else if(isset($_GET['cpf'])) {
+	} else if (isset($_GET['cpf'])) {
 		$cpf = trim($_GET['cpf']);
 		$responsavelDao = new ResponsavelDao();
 		if($responsavelDao->buscarCpf($cpf))
 			echo json_encode(true);
 		else
 			echo json_encode(false);
-	} else if(isset($_GET['email'])) {
+	} else if (isset($_GET['email'])) {
 		$email = trim($_GET['email']);
 		$responsavelDao = new ResponsavelDao();
-		if($responsavelDao->buscarEmail($email))
+		if ($responsavelDao->buscarEmail($email))
 			echo json_encode(true);
 		else
 			echo json_encode(false);
-	} else if(isset($_GET['id'])){
+	} else if (isset($_GET['id'])){
 		$responsavelDao = new ResponsavelDao();
 		$responsavel 	= $responsavelDao->get($_GET['id']);
 		echo json_encode($responsavel);
