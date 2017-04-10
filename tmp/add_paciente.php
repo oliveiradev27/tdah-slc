@@ -13,16 +13,12 @@ if(isset($_GET['paciente_id']))
                 <div>
                     <div style="float: left;">
                         <img src="../img/people.png">
-
-
-                    </div>
-
                     <div style="float: right;width: 360px;">
-                        <input type="hidden" name="responsavel_id" id="responsavel_id" value="<?php echo $responsavel_id ?>">
+                        <input type="hidden" name="paciente_id" id="paciente_id" value="<?php echo $paciente_id ?>">
                         <input type="text" name="nome"  id="nome" placeholder="Nome:" required class="tmp_p tmp_w" value="" style="border: 1px solid">
                         <div class="ClearBox"></div>
                         <input type="date" name="data" id="data" required class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid">
-                        <input type="button" name="localiza" class="submit_calen"  >
+                        <input type="button" name="localiza" class="submit_calen">
                     </div>
 
                 </div>
@@ -31,11 +27,11 @@ if(isset($_GET['paciente_id']))
                 <div class="ClearBox"></div>
                 <h3> Responsável</h3>
                 <select name="responsavel_id" id="responsavel_id" required class="tmp_p tmp_w" style="width: 310px">
-                <option value="" selected> ----- </option>
+                  <option value="" selected> ----- </option>
                 </select>
                 <input type="button" name="localiza" class="submit_cont" style="float: right;" >
                 <div class="ClearBox"></div>
-                <h3>Filiação</h3>
+                <h3>Vínculo</h3>
                 <select name="filiacao" id="filiacao" placeholder="Filiação" required class="tmp_p tmp_w" style="width: 370px">
                     <option value=""> ----- </option>
                     <option value="pai">Pai</option>
@@ -86,7 +82,7 @@ if(isset($_GET['paciente_id']))
 
 
         function inserir() {
-             var responsavel_id         = $('#responsavel_id').val();
+            var responsavel_id         = $('#responsavel_id').val();
             var nome                   = $('#nome').val();
             var data                   = $('#data').val();
             var descricao_filiacao     = $('#filiacao').val();
@@ -99,7 +95,7 @@ if(isset($_GET['paciente_id']))
                         descricao_filiacao : descricao_filiacao
                      },
                       function (data, textStatus, xhr) {
-                      if (!(data in 'error')){
+                      if (data){
                             data = JSON.parse(data);
                             $('#paciente_id').val(data);
                             $("#mensagem p").text("Cadastrado com Sucesso!");
