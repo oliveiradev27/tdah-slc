@@ -1,45 +1,78 @@
 <?php
 $pagina['titulo'] = 'Profissional';
 include ('header.php');
+$profissional_id = "";
+if (isset($_GET['id'])) {
+	$profissional_id = $_GET['id'];
+}
+
 ?>
+<style>
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 34px;
+        border-bottom: 1px solid;
+        border-radius: 0px;
+        background: #fff;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+        .select2-container--default .select2-selection--single {
+            background-color: #fff;
+            border: 0;
+            line-height: 34px;
+        }
+</style>
 <section>
     <article>
 
         <div class="boxMain">
             <form name="ava_pac" method="post" action="profissional.php" >
+                <input type="hidden" name="profissional_id" id="profissional_id" value="<?php echo $profissional_id?>">
                <div>
                    <div style="float: left;">
                         <img src="../img/people.png">
                    </div>
                    <div style="float: right;width: 360px;">
-                       <input type="text" name="nome" placeholder="Digite o nome:" class="tmp_p tmp_w" value="" style="border: 1px solid" required>
+                       <input type="text" name="nome" placeholder="Nome do Profissional" class="tmp_p tmp_w" value="" style="border: 1px solid" required>
                        <div class="ClearBox"></div>
                        <input type="date" name="data" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid" required>
                        <input type="button" name="localiza" class="submit_calen"  >
                    </div>
 
                </div>
-
-
                 <div class="ClearBox"></div>
                 <select class="tmp tmp_phone" name="cat_registro" required>
                     <option value="">Registro</option>
                     <option value="CRP">CRP</option>
                     <option value="CRM">CRM</option>
                 </select>
-                <input type="text" name="registro" class="tmp_p tmp_w" value=""  style="width: 200px" required>
+                <input type="text" name="registro" class="tmp_p tmp_w" placeholder="ex: número do CRP"value=""  style="width: 200px" required>
                 <div class="ClearHr"><div class="icons_p"></div></div>
                 <h3>Filial</h3>
-                <input type="hidden" name="empresa_id" id="empresa_id" class="tmp_p tmp_w" >
-                <input type="text" name="filial" id="filial" class="tmp_p tmp_w" value="" style="width: 360px" required>
-                <input type="button" name="localiza-empresa" id="localiza-empresa" class="submit"  title="Clique aqui para pesquisar as empresas cadastradas no sistema." >
-                <div class="ClearHr"><div class="icons_t"></div></div>
+                <select name="filial" id="filial" class="tmp_p tmp_w">
+                    <option value=""> ----- </option>
+                </select>
+                <div class="ClearHr"><div class="icons_con"></div></div>
+
+                <select class="tmp tmp_phone" name="tipo_documento" STYLE="width: 110px">
+                    <option value="CPF" selected>CPF</option>
+                </select>
+                <input type="text" name="documento" id="cpf" class="tmp_p tmp_w" placeholder="___.___.___-__" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14" value="" style="width: 142px">
+                <div class="ClearBox"></div>
+                <select class="tmp tmp_phone" name="contato-tipo" >
+                    <option value="E-mail" selected>E-mail </option>
+                </select>
+                <input type="email" name="email" class="tmp_p tmp_w" value="" required placeholder="ex: nome@dominio.com">
+
+
+                <div class="ClearBox"></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefone_tipo" >
                         <option value="telefone">Telefone</option>
                         <option value="celular">Celular</option>
                     </select>
-                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required>
+                    <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required style="width: 160px" placeholder="(00) 00000-0000">
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
                     <div class="toggle-number">
                         <select class="tmp tmp_phone" name="telefone_tipo2" >
@@ -49,11 +82,58 @@ include ('header.php');
                         <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
                     </div>
                 </div>
-                <div class="ClearHr"><div class="icons_mail"></div></div>
-                <select class="tmp tmp_phone" name="contato-tipo" >
-                    <option value="E-mail" selected>E-mail </option>
+
+                <div class="ClearHr"><div class="icons_hom"></div></div>
+                <h3> CEP</h3>
+                <input type="text" name="cep" id="cep" placeholder="00000-000" required class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" >
+                <div class="ClearBoxli"></div>
+                <h3> Endereço</h3>
+                <input type="text" name="endereco" id="endereco" placeholder="ex: Rua João Carlos" class="tmp_p tmp_w" value="" style="width: 365px;font-weight: 500;padding: 0 3px" >
+                <div class="ClearBoxli"></div>
+                <h3> Número</h3>
+                <input type="text" name="numero" id="numero" placeholder="Nº:" class="tmp_p tmp_w" value="" style="width: 100px;font-weight: 500;padding: 0 3px" >
+                <div class="ClearBoxli"></div>
+                <h3> Complemento</h3>
+                <input type="text" name="complemento" id="complemento" placeholder="ex: Bloco A - Apto. 100" class="tmp_p tmp_w" value="" style="width: 335px;font-weight: 500;padding: 0 3px" >
+                <div class="ClearBoxli"></div>
+                <h3> Bairro</h3>
+                <input type="text" name="bairro" id="bairro" placeholder="ex: Belém" class="tmp_p tmp_w" value="" style="width: 395px;font-weight: 500;padding: 0 3px" >
+                <div class="ClearBoxli"></div>
+                <h3> Cidade</h3>
+                <input type="text" name="cidade" id="cidade" placeholder="ex: São Paulo" class="tmp_p tmp_w" value="" style="width: 390px;font-weight: 500;padding: 0 3px" >
+                <div class="ClearBoxli"></div>
+                <h3> Estado</h3>
+                <select class="tmp tmp_phone" name="uf" id="estado" style="width:390px;font-weight: 500;padding: 0 3px;background: #FFF;" required>
+                    <option value="" disabled selected>----</option>
+                    <option value="AC">Acre (AC)</option>
+                    <option value="AL">Alagoas (AL)</option>
+                    <option value="AP">Amapá (AP)</option>
+                    <option value="AM">Amazonas (AM)</option>
+                    <option value="BA">Bahia (BA)</option>
+                    <option value="CE">Ceará (CE)</option>
+                    <option value="DF">Distrito Federal (DF)</option>
+                    <option value="ES">Espírito Santo (ES)</option>
+                    <option value="GO">Goiás (GO)</option>
+                    <option value="MA">Maranhão (MA)</option>
+                    <option value="MT">Mato Grosso (MT)</option>
+                    <option value="MS">Mato Grosso do Sul (MS)</option>
+                    <option value="MG">Minas Gerais (MG)</option>
+                    <option value="PR">Pará (PA)</option>
+                    <option value="PB">Paraíba (PB)</option>
+                    <option value="PA">Paraná (PR)</option>
+                    <option value="PE">Pernambuco (PE)</option>
+                    <option value="PI">Piauí (PI)</option>
+                    <option value="RJ">Rio de Janeiro (RJ)</option>
+                    <option value="RN">Rio Grande do Norte (RN)</option>
+                    <option value="RS">Rio Grande do Sul (RS)</option>
+                    <option value="RO">Rondônia (RO)</option>
+                    <option value="RR">Roraima (RR)</option>
+                    <option value="SC">Santa Catarina (SC)</option>
+                    <option value="SP">São Paulo (SP)</option>
+                    <option value="SE">Sergipe (SE)</option>
+                    <option value="TO">Tocantins (TO)</option>
                 </select>
-                <input type="email" name="email" class="tmp_p tmp_w" value="" required >
+                <div class="ClearBoxli"></div>
                 <!--<input type="submit" name="localiza" class="submit_more"  >-->
                 <div class="ClearBox"></div>
                 <input type="submit" name="avancar" class="avancar" value="Continuar"  >
@@ -71,50 +151,15 @@ include ('header.php');
 <script  type="text/javascript" src="../js/validations.js"></script>
 <script type="text/javascript">
     jQuery(document).ready(function($){
+        carregaSelectEmpresas();
+        buscar();
+
         $('.submit_more').on('click', function(event) {
             event.preventDefault();
             $('#info-contatos-tel').append('');
         });
 
-        $('#filial').focus(function(){
-           $('#localiza-empresa').click()
-                                 .focus();
-        });
-
-        $('#localiza-empresa').on('click', function(event){
-            $.get('../controller/empresa.php?get=all',
-                function(data)
-                {
-                    data = JSON.parse(data);
-                    console.log(data);
-                    var html = "";
-                    for(var i = 0; i < data.length; i++) {
-                        html += "<tr id=\""+data[i].empresa_id +"\" style='font-size:9px'>id="+ data[i].cnpj +">";
-                        html +=     "<td>"+ data[i].nome +"</td>";
-                        html +=     "<td>"+ data[i].cnpj +"</td>";
-                        html +=     "<td><button onclick=\"selecionaEmpresa("+ data[i].empresa_id +",'"+data[i].cnpj+" - "+ data[i].nome +"')\">Selecionar</button></td>";
-                        html += "</tr>";
-                    }
-
-                   $('#modal-table tbody').append(html);
-                   $('#modal-table').dialog({
-                       show: { effect: 'fade', speed: '1500' },
-                       hide: { effect: 'fade', speed: '1000' },
-                       buttons: {
-                           OK: function() {
-                                 $('input[name="valor"]').focus();
-                                 $(this).dialog("close");
-                                 $('#modal-table tbody tr').remove();
-                             }
-                          },
-                      close: function() {
-                          $('#modal-table tbody tr').remove();
-                      }
-                   });
-                }
-            );
-
-        });
+        $('#filial').select2();
 
         $('#add-number').on('click', function(){
             var tel1 = $('input[name="telefone"]').val();
@@ -139,44 +184,191 @@ include ('header.php');
 
         });
 
-        $("#search-empresa").keyup(function(){
-            //pega o css da tabela
-            //var tabela = $(this).attr('alt');
-            if( $(this).val() != ""){
-                $("#modal-table  tbody>tr").hide();
-                $("#modal-table  tbody>tr td:contains-ci('" + $(this).val() + "')").parent("tr").show();
-            } else{
-                $("#modal-table  tbody>tr").show();
+        $('#cep').keyup(function(){
+            var cep = $(this).val();
+            if(cep.length == 9){
+                cep = cep.replace('-','');
+                console.log(cep);
+                $.getJSON("http://viacep.com.br/ws/"+cep+"/json/")
+                .done(function(dados){
+                    if(!("erro" in dados))
+                    {
+                        console.log(dados);
+                        $('#endereco').val(dados.logradouro);
+                        $('#bairro').val(dados.bairro);
+                        $('#complemento').val(dados.complemento);
+                        $('#cidade').val(dados.localidade);
+                        $('#estado').val(dados.uf);
+                    }
+               }).fail(function(jqxhr, textStatus, error){
+                    var erro = textStatus+ ' - '+ error;
+                });
             }
         });
 
+        $('#cpf').keyup(function(){
+            var cpf = $(this).val();
+            console.log(cpf.length);
+            if(cpf.length == 14)
+                 ValidarCPF(ava_pac.documento);
+
         });
-        $.extend($.expr[":"], {
-        "contains-ci": function(elem, i, match, array) {
-            return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+
+        $('form[name="ava_pac"]').submit(function(event){
+            event.preventDefault();
+            if($('#profissional_id').val() != ""){
+                 $("#mensagem p").text("Deseja os atualizar os dados?");
+                 $("#mensagem small").text("Clique em OK para Atualizar dados. Novo para iniciar com um novo cadastro.");
+                 $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                        sessionStorage.setItem("novo", 1);
+                                        $('form[name="ava_pac"]').unbind('submit').submit();
+                                    },
+                                    Novo: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                        window.location = "add_profissional.php";
+                                    },
+                                    Cancelar: function() {
+                                        $('input[name="valor"]').focus();
+                                        $(this).dialog("close");
+                                    },
+                                }
+                            });
+             } else {
+
+                 $.get("../controller/profissional.php?cpf="+$('#cpf').val())
+                      .done(function(data){
+                            data = JSON.parse(data);
+                            if(data == true){
+                                $("#mensagem p").text("CPF já Cadastrado!");
+                                $("#mensagem small").text("");
+                                $("#mensagem").dialog({
+                                     show : {effect: 'fade', speed: '1500'},
+                                     hide : {effect: 'fade', speed: '1000'},
+                                     buttons: {
+                                        OK: function() {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                            } else {
+                                sessionStorage.setItem("novo", 1);
+                                $('form[name="ava_pac"]').unbind('submit').submit();
+                            }
+                      });
+             }
+        });
+
+        function verificarCPF(cpf){
+            console.log(cpf.value);
+            var valido = ValidarCPF(cpf);
+            console.log(valido);
+            if(ValidarCPF(cpf)){
+                $.get('../controller/profissional.php?cpf='+cpf.value)
+                 .done(function(data){
+                    data = JSON.parse(data);
+                    if(data == true)
+                    {
+                        $("#mensagem p").text("CPF já Cadastrado!");
+                        $("#mensagem small").text("");
+                        $("#mensagem").dialog({
+                            show : {effect: 'fade', speed: '1500'},
+                            hide : {effect: 'fade', speed: '1000'},
+                            buttons: {
+                                OK: function() {
+                                        $(this).dialog("close");
+                                         $('#cpf').val("")
+                                                  .focus();
+                                    }
+                                }
+                        });
+
+                        $('#cpf-validador').val("1");
+                     } else {
+                        $('#cpf-validador').val("0");
+                     }
+                });
+            } else {
+               $('#cpf-validador').val("0");
+            }
         }
 
-  });
-    function selecionaEmpresa(id, cnpj)
-    {
-       $('#filial').val(cnpj);
-       $('#empresa_id').val(id);
-       $('#modal-table').dialog("close");
-       $('#modal-table tbody tr').remove();
+        function buscar()
+        {
+            var id = $('#profissional_id').val();
+            if(id != ""){
+              $.get("../controller/profissional.php?id="+id,
+                function(data){
+                if(data)
+                {
+                    data = JSON.parse(data);
+                    console.log(data);
+                    $('[name="nome"]').val(data.nome);
+                    $('[name="tipo_documento"]').val();
+                    $('[name="documento"]').val(data.cpf);
+                    $('[name="data_nascimento"]').val(data.data_nascimento);
+                    $('[name = "empresa_id"]').val();
+                    $('#telefones').val(JSON.stringify(data.contato));
+                    $('#endereco').val(data.endereco.logradouro);
+                    $('#bairro').val(data.endereco.bairro);
+                    $('#numero').val(data.endereco.numero);
+                    $('#complemento').val(data.endereco.complemento);
+                    $('#cidade').val(data.endereco.cidade);
+                    $('#estado').val(data.endereco.uf);
+                    $('#cep').val(data.endereco.cep);
+                    $('#registro_id').val(data.registro_id);
+                    $('#empresa_id').val(data.empresa_id);
+                    $('#email').val(data.email);
+                    $('#endereco_id').val(data.endereco.endereco_id);
+                    $('[name = "cat_registro"]').val(data.tipo);
+                    $('[name = "registro"]').val(data.numero);
+
+                    if($('#novo').text() > 0){
+                         $("#mensagem p").text("Cadastrado com Sucesso!");
+                         $("#mensagem small").text("Dados salvos na aplicação.");
+                         $("#mensagem").dialog({
+                                    show : {effect: 'fade', speed: '1500'},
+                                    hide : {effect: 'fade', speed: '1000'},
+                                    buttons: {
+                                        OK: function() {
+                                            $('input[name="valor"]').focus();
+                                            $(this).dialog("close");
+                                         }
+                                   }
+                        });
+
+                      $('#novo').remove();
+                    }
+                   }
+                });
+            }
+        }
+
+
+        });
+
+
+    function carregaSelectEmpresas() {
+        $.get('../controller/empresa.php?get=all',
+                function(data)
+                {
+                    data = JSON.parse(data);
+                    console.log(data);
+                    var html = "";
+                    for(var i = 0; i < data.length; i++) {
+                        html += "<option value=\""+data[i].empresa_id +"\" >";
+                        html +=     data[i].nome +" - "+ data[i].cnpj;
+                        html += "</option>";
+                    }
+
+                    $('#filial').append(html);
+                }
+        );
     }
 </script>
-<div id="modal-table" title="Empresas" style="max-height:200px !important; display:none; text-align:center;" >
-<input type="text" name="search-empresa" id="search-empresa" alt="lista-empresas" value="" placeholder="Buscar">
-<table border="0" style="width:100%" class="lista-empresas">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>CNPJ</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-</table>
-</div>
-</html>

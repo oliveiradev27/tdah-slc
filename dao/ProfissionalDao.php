@@ -1,7 +1,7 @@
 <?php 
 require_once('../config/Conexao.php');
 require_once('RegistroDao.php');
-require_once('EnderecoProfissionalDao.php');
+require_once('EnderecoDao.php');
 class ProfissionalDao extends Conexao
 {
 
@@ -120,24 +120,34 @@ class ProfissionalDao extends Conexao
 	{
 		if($id)
 		{
-			$query = $this->getConexao()->prepare('SELECT * 
-												  FROM
-												  		profissional
-												 INNER JOIN
-												 	   registro
-												 ON
-												 		profissional.registro_id = registro.registro_id
-												 WHERE
-												 		profissional.profissional_id = :id');
+			$con    = $this->getConexao(); 	
+			$query 	= $con->prepare('SELECT
+											profissional_id,
+											nome,
+											endereco_id AS endereco,
+											profissional.registro_id AS registro,
+											login_id AS login,
+											email,
+											cpf,
+											data_nascimento,
+											empresa_id
+									 FROM
+									  		profissional
+									 LEFT JOIN
+									 	   registro
+									 ON
+									 		profissional.registro_id = registro.registro_id
+									 WHERE
+									 		profissional.profissional_id = :id');
 			$query->bindValue(':id', $id, PDO::PARAM_INT);									
 			$query = $this->executar($query);
-
+			print_r($query->fetch());
 			$contatoProfissionalDao = new ContatoProfissionalDao();
 			$profissional = $query->fetch();
-			$profissional->contato  = $contatoProfissionalDao->getPorProfissional($profissional->profissional_id);
+			//$profissional->contato  = $contatoProfissionalDao->getPorProfissional($profissional->profissional_id) ;
 		    
-			$enderecoProfissionalDao = new EnderecoProfissionalDao();
-			$profissional->endereco = $enderecoProfissionalDao->getPorProfissional($profissional->endereco_id);
+			$enderecoDao = new EnderecoDao();
+			$profissional->endereco = $enderecoDao->get($profissional->endereco);
 			if($query)
 				return $profissional;
 			else
@@ -149,24 +159,42 @@ class ProfissionalDao extends Conexao
 
 	public function getAll()
 	{
-		   $query = $this->getConexao()->prepare('SELECT * 
+			$query = $this->getConexao()->prepare('SELECT
+														profissional_id,
+														nome,
+														endereco_id AS endereco,
+														registro_id AS registro,
+														login_id AS login,
+														email,
+														cpf,
+														data_nascimeto,
+														empresa_id
 												  FROM
 												  		profissional
-												  INNER JOIN
-												  		endereco
-												  ON
-												  		profissional.endereco_id = endereco.endereco_id
-												 INNER JOIN
+												 LEFT JOIN
 												 	   registro
 												 ON
-												 		profissional.registro_id = registro.registro_id
-												 INNER JOIN
-												 	 	contato_profissional
-												 ON
-												 		profissional.profissional_id = contato_profissional.profissional_id');
+												 		profissional.registro_id = registro.registro_id');
 			$query = $this->executar($query);
+
+			$contatoProfissionalDao = new ContatoProfissionalDao();
+			$enderecoProfissionalDao = new EnderecoDao();
+
+			$profissionais = $query->fetchAll();
+
+			$i = 0;
+			foreach ($profissionais as $profissional) {
+				$profissional->contato  = $contatoProfissionalDao->getPorProfissional($profissional->profissional_id);
+				$profissional->endereco = $enderecoProfissionalDao->get($profissional->endereco);
+
+				$profissionais[$i] = $profissional;
+				$i++;
+			}
+
 			if($query)
-				return $query->fetchAll();
+				return $profissionais;
+			else
+			 	false;
 	}
 
 	public function alterar($profissional)

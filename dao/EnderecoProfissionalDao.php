@@ -44,7 +44,7 @@ class EnderecoProfissionalDao extends Conexao
                                                 WHERE
                                                     endereco_id = :id');
 		$query->bindValue(':id', $id, PDO::PARAM_INT);
-        $query = $this->executar($query);
+        $query->execute();
 		if($query)
 			return $query->fetch();
 		else

@@ -9,7 +9,6 @@
 	require_once("../model/Endereco.php");
 	require_once("../model/Registro.php");
 
-
 	if(isset($_POST['nome']) && empty($_POST['profissional_id']))
 	{
 		$registro = new Registro();

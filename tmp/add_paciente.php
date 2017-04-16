@@ -2,8 +2,8 @@
 $pagina['titulo'] = 'Paciente';
 require_once('header.php');
 $paciente_id = "";
-if(isset($_GET['paciente_id']))
-    $paciente_id = $_GET['paciente_id'];
+if(isset($_GET['id']))
+    $paciente_id = $_GET['id'];
  ?>
 <section>
     <article>
@@ -69,14 +69,36 @@ if(isset($_GET['paciente_id']))
 <script type="text/javascript">
     jQuery(document).ready(function($) {
         carregaSelectResponsavel();
+        get();
+
         $('#responsavel_id').select2();
 
 
         $('[name="ava_pac"]').on('submit', function(event) {
             event.preventDefault();
             var paciente_id = $('#paciente_id').val();
-            if (paciente_id == "")
-                inserir();     
+            if (paciente_id == ""){
+                inserir(); 
+            } else {
+                 $("#mensagem p").text("Deseja os atualizar os dados?");
+                 $("#mensagem small").text("Clique em OK para Atualizar dados. Novo para iniciar com um novo cadastro.");
+                 $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                        alterar();
+                                    },
+                                    Novo: function() {
+                                        window.location = "add_profissional.php";
+                                    },
+                                    Cancelar: function() {
+                                        $(this).dialog("close");
+                                    },
+                                }
+                            });
+            }   
 
         });
 
@@ -142,5 +164,67 @@ if(isset($_GET['paciente_id']))
                 }
              });
         }
-    });    
+
+        function get(){
+            var id = $('#paciente_id').val();
+            if(id != ""){
+                $.get('../controller/paciente.php?id='+id)
+                 .done(function(data){
+                    if (data){
+                            data = JSON.parse(data);
+                            $('#nome').val(data.paciente.nome);
+                            $('#data').val(data.paciente.data_nascimento);
+                            $('#responsavel_id').val(data.responsavel).trigger('change');;
+                            $('#filiacao').val(data.descricao);
+                        }
+                });
+            }
+        }
+
+        function alterar() {
+            var paciente_id            = $('#paciente_id').val();
+            var responsavel_id         = $('#responsavel_id').val();
+            var nome                   = $('#nome').val();
+            var data                   = $('#data').val();
+            var descricao_filiacao     = $('#filiacao').val();
+
+            $.post('../controller/paciente.php',
+                     {
+                        paciente_id        : paciente_id,
+                        responsavel_id     : responsavel_id,
+                        nome               : nome,
+                        data               : data,
+                        descricao_filiacao : descricao_filiacao
+                     },
+                      function (data, textStatus, xhr) {
+                      data = JSON.parse(data);
+                      if (data){
+                            $('#paciente_id').val(data);
+                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                      } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                    }
+            });
+        }
+   });    
 </script>

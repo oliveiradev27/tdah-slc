@@ -5,7 +5,7 @@ require_once('../model/Filiacao.php');
 require_once('../dao/PacienteDao.php');
 require_once('../dao/FiliacaoDao.php');
 
-if (isset($_POST['nome'])){
+if (isset($_POST['nome']) && !isset($_POST['paciente_id'])){
 
 	$paciente = new Paciente();
 	$paciente->setNome(trim($_POST['nome']));
@@ -20,8 +20,9 @@ if (isset($_POST['nome'])){
 
 	$filiacao = new Filiacao();
 	$filiacao->setPacienteId($paciente->getPacienteId());
-	$filiacao->setResponsavelId($_POST['responsavel_id']);
 	$filiacao->setDescricao(trim($_POST['descricao_filiacao']));
+	$filiacao->setResponsavelId($_POST['responsavel_id']);
+
 
 	$filiacaoDao = new FiliacaoDao();
 	if ($filiacaoDao->inserir($filiacao))
@@ -29,8 +30,39 @@ if (isset($_POST['nome'])){
 	else
 		echo json_encode(false);
 	return;
-} else if ($_POST['paciente_id']){
+} else if (isset($_POST['paciente_id']) && $_POST['paciente_id'] != ""){
 	
+	$paciente = new Paciente();
+	$paciente->setPacienteId($_POST['paciente_id']);
+	$paciente->setNome(trim($_POST['nome']));
+	$paciente->setDataNascimento($_POST['data']);
+
+	$pacienteDao = new PacienteDao();
+	if (!$pacienteDao->alterar($paciente)){
+		echo json_encode(false);
+		return;
+	}
+
+	$filiacao    = new Filiacao();
+	$filiacaoDao = new FiliacaoDao();
+	$filiacao->setFiliacaoId($filiacaoDao->getPorPacienteId($paciente->getPacienteId())->filiacao_id);
+	$filiacao->setPacienteId($paciente->getPacienteId());
+	$filiacao->setResponsavelId($_POST['responsavel_id']);
+	$filiacao->setDescricao(trim($_POST['descricao_filiacao']));
+	if ($filiacaoDao->alterar($filiacao))
+		echo json_encode(true);
+	else
+		echo json_encode(false);
+
+} else if (isset($_GET['id'])) {
+
+	$pacienteDao 		= new PacienteDao();
+	$paciente  			= $pacienteDao->get($_GET['id']);
+	$filiacaoDao    	= new FiliacaoDao();
+	$filiacao 			= $filiacaoDao->getPorPacienteId($paciente->id);
+	$filiacao->paciente = $paciente;
+	echo json_encode($filiacao);
+
 }
 
 ?>

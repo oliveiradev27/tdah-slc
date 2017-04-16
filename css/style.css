@@ -6,7 +6,7 @@ video {
     max-width: 100%;
 }
 
-::-webkit-input-placeholder  { font-weight: bold; }
+::-webkit-input-placeholder  { font-weight: normal; }
 input:-moz-placeholder  { font-weight: bold; }
 textarea:-moz-placeholder  { font-weight: bold; }
 
@@ -490,7 +490,7 @@ nav[role="custom-dropdown"] ul>li:hover>a {
     width: 200px;
 }
 .boxMain .tmp_phone {
-    font-size: 14px;
+    font-size: 16px;
     color: #333;
     background-color: #F1F1F1;
     outline: none;
@@ -1092,9 +1092,15 @@ nav[role="custom-dropdown"] ul>li:hover>a {
     height: 32px;
 }
 .icons_peo {
-    background: url(../img/Conference.gif) no-repeat 0 3px #f1f1f1;
+    background: url(../img/Conference.gif) no-repeat 0 -3px #f1f1f1;
     width: 45px;
     height: 32px;
+    text-indent: 45px;
+    border: 0;
+    font-family: "Arial", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1F1F1F;
 }
 .icons_Lei {
     background: url(../img/Book.gif) no-repeat 0 0 #f1f1f1;
@@ -1141,3 +1147,4 @@ nav[role="custom-dropdown"] ul>li:hover>a {
     -moz-transition: all 1.5s ease;
     -o-transition: all 1.5s ease;
 }
+
