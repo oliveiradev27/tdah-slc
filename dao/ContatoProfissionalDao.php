@@ -1,5 +1,6 @@
 <?php 
 
+require_once('../config/Conexao.php');
 require_once('../model/ContatoProfissional.php');
 
 class ContatoProfissionalDao extends Conexao {

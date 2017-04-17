@@ -6,7 +6,3 @@ if(isset($_GET['responsavel_id'])){
 	$contatoResponsavelDao = new ContatoResponsavelDao();
 	echo json_encode($contatoResponsavelDao->getPorResponsavel($_GET['responsavel_id']));
 }
-
-
-
- ?>

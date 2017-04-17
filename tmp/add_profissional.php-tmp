@@ -54,16 +54,11 @@ if (isset($_GET['id'])) {
                     <option value=""> ----- </option>
                 </select>
                 <div class="ClearHr"><div class="icons_con"></div></div>
-
-                <select class="tmp tmp_phone" name="tipo_documento" STYLE="width: 110px">
-                    <option value="CPF" selected>CPF</option>
-                </select>
+                <h3>CPF</h3>
                 <input type="text" name="documento" id="cpf" class="tmp_p tmp_w" placeholder="___.___.___-__" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14" value="" style="width: 142px">
                 <div class="ClearBox"></div>
-                <select class="tmp tmp_phone" name="contato-tipo" >
-                    <option value="E-mail" selected>E-mail </option>
-                </select>
-                <input type="email" name="email" class="tmp_p tmp_w" value="" required placeholder="ex: nome@dominio.com">
+                <h3>E-mail</h3>
+                <input type="email" name="email" id="email" class="tmp_p tmp_w" value="" required placeholder="ex: nome@dominio.com">
 
 
                 <div class="ClearBox"></div>
@@ -136,7 +131,7 @@ if (isset($_GET['id'])) {
                 <div class="ClearBoxli"></div>
                 <!--<input type="submit" name="localiza" class="submit_more"  >-->
                 <div class="ClearBox"></div>
-                <input type="submit" name="avancar" class="avancar" value="Continuar"  >
+                <input type="submit" name="avancar" class="avancar" value="Concluir"  >
 
                 <div class="ClearBox"></div>
             </form>
@@ -181,7 +176,6 @@ if (isset($_GET['id'])) {
                         }
                     });
             }
-
         });
 
         $('#cep').keyup(function(){
@@ -312,8 +306,8 @@ if (isset($_GET['id'])) {
                     $('[name="nome"]').val(data.nome);
                     $('[name="tipo_documento"]').val();
                     $('[name="documento"]').val(data.cpf);
-                    $('[name="data_nascimento"]').val(data.data_nascimento);
-                    $('[name = "empresa_id"]').val();
+                    $('[name="data"]').val(data.data_nascimento);
+                    $('#filial').val(data.empresa_id).trigger('change');
                     $('#telefones').val(JSON.stringify(data.contato));
                     $('#endereco').val(data.endereco.logradouro);
                     $('#bairro').val(data.endereco.bairro);
@@ -326,26 +320,23 @@ if (isset($_GET['id'])) {
                     $('#empresa_id').val(data.empresa_id);
                     $('#email').val(data.email);
                     $('#endereco_id').val(data.endereco.endereco_id);
-                    $('[name = "cat_registro"]').val(data.tipo);
-                    $('[name = "registro"]').val(data.numero);
-
-                    if($('#novo').text() > 0){
-                         $("#mensagem p").text("Cadastrado com Sucesso!");
-                         $("#mensagem small").text("Dados salvos na aplicação.");
-                         $("#mensagem").dialog({
-                                    show : {effect: 'fade', speed: '1500'},
-                                    hide : {effect: 'fade', speed: '1000'},
-                                    buttons: {
-                                        OK: function() {
-                                            $('input[name="valor"]').focus();
-                                            $(this).dialog("close");
-                                         }
-                                   }
-                        });
-
-                      $('#novo').remove();
-                    }
+                    $('[name = "cat_registro"]').val(data.registro.tipo);
+                    $('[name = "registro"]').val(data.registro.numero);
                    }
+                });
+
+                $.get('../controller/contato_profissional.php?profissional_id='+id,
+                    function(data){
+                    data = JSON.parse(data);
+                    if (data.length > 0){
+                        $('[name="telefone_tipo"]').val(data[0].tipo);
+                        $('[name="telefone"]').val(data[0].valor);
+                        if (data.length > 1){
+                            $('#add-number').click();
+                            $('[name="telefone_tipo2"]').val(data[1].tipo);
+                            $('[name="telefone2"]').val(data[1].valor);
+                        }
+                    }
                 });
             }
         }
@@ -353,6 +344,23 @@ if (isset($_GET['id'])) {
 
         });
 
+    function inserir(){
+
+
+
+        $("#mensagem p").text("Cadastrado com Sucesso!");
+        $("#mensagem small").text("Dados salvos na aplicação.");
+        $("#mensagem").dialog({
+                   show : {effect: 'fade', speed: '1500'},
+                   hide : {effect: 'fade', speed: '1000'},
+                   buttons: {
+                       OK: function() {
+                           $('input[name="valor"]').focus();
+                           $(this).dialog("close");
+                        }
+                  }
+       });
+    }
 
     function carregaSelectEmpresas() {
         $.get('../controller/empresa.php?get=all',

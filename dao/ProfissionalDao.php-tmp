@@ -126,21 +126,15 @@ class ProfissionalDao extends Conexao {
 											empresa_id
 									 FROM
 									  		profissional
-									 LEFT JOIN
-									 	   registro
-									 ON
-									 		profissional.registro_id = registro.registro_id
 									 WHERE
 									 		profissional.profissional_id = :id');
 			$query->bindValue(':id', $id, PDO::PARAM_INT);
-			$query = $this->executar($query);
-			print_r($query->fetch());
-			$contatoProfissionalDao = new ContatoProfissionalDao();
+			$query                  = $this->executar($query);
 			$profissional           = $query->fetch();
-			//$profissional->contato  = $contatoProfissionalDao->getPorProfissional($profissional->profissional_id) ;
-
 			$enderecoDao            = new EnderecoDao();
 			$profissional->endereco = $enderecoDao->get($profissional->endereco);
+			$registroDao            = new RegistroDao();
+			$profissional->registro = $registroDao->get($profissional->registro);
 			if ($query) {
 				return $profissional;
 			} else {
