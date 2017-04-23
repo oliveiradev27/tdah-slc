@@ -2,7 +2,7 @@
 	require_once('../dao/LoginDao.php');
 	require_once('../model/Login.php');
 
-	if(isset($_POST['profissional_id']))
+	if(isset($_POST['profissional_id']) && isset($_POST['login']) && isset($_POST['senha'])  && $_POST['permissao'])
 	{
 		$profissional_id = (int) $_POST['profissional_id'];
 		$login = new Login();

@@ -200,7 +200,7 @@ if(isset($_GET['id']))
                       data = JSON.parse(data);
                       if (data){
                             $('#paciente_id').val(data);
-                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem p").text("Salvo com Sucesso!");
                             $("#mensagem small").text("Dados salvos na aplicação.");
                             $("#mensagem").dialog({
                                 show : {effect: 'fade', speed: '1500'},

@@ -77,4 +77,21 @@ class ContatoProfissionalDao extends Conexao {
             return false;
     }
 
+    public function excluir($id)
+    {
+        $query = $this->getConexao()->prepare('DELETE FROM
+                                                  contato_profissional    
+                                              WHERE
+                                                  contato_id = :id'
+                                             );
+        $query->bindValue(':id', $id, PDO::PARAM_INT);
+        
+        $query = $this->executar($query);
+        if($query){
+            return true;
+        } else 
+            return false;
+    }
+
+
 }

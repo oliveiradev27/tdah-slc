@@ -112,7 +112,6 @@
 
 		if (count($contatosExistentes) > 0){
 			$contatosExistentes = array_values($contatosExistentes);
-			print_r($contatosExistentes);
 			$contatoResponsavelDao->excluir($contatosExistentes[0]->contato_id);
 		}
 

@@ -2,6 +2,21 @@
     $pagina['titulo'] = 'Configuração';
     include_once('header.php');
 ?>
+ <style>
+     .select2-container--default .select2-selection--single .select2-selection__rendered {
+         line-height: 34px;
+         border-bottom: 1px solid;
+         border-radius: 0px;
+         background: #fff;
+         font-weight: bold;
+         font-size: 16px;
+    } 
+      .select2-container--default .select2-selection--single {
+              background-color: #fff;
+              border: 0;
+              line-height: 34px;
+      }
+</style>
 <section>
     <article>
 
@@ -14,9 +29,9 @@
                 <div class="ClearBox"></div>
                     <div class="ClearHr"><div class="icons_pro"></div></div>
                <h3> Responsável</h3>
-                <input type="hidden" id="profissional_id" name="profissional_id">
-                <input type="text" id="responsavel" name="responsavel" required class="tmp_p tmp_w" value="" style="width: 310px" >
-                <input type="button" id="localiza-profissional" name="localiza" class="submit_cont"  >
+                <select name="profissional_id" id="profissional_id" required class="tmp_p tmp_w">
+                  
+                </select>                
                 <div class="ClearHr"><div class="icons_con"></div></div>
                  <h3>Login</h3>
                
@@ -57,7 +72,7 @@
 <?php  include_once('footer.php'); ?>
 <script type="text/javascript">
   $('document').ready(function(){
-
+       getProfissionais();
        $('[name="ava_pac"]').on('submit', function(event){
            event.preventDefault();
            var login            = $('[name="login"]').val();
@@ -108,63 +123,9 @@
 
        });
 
-       $('#responsavel').focus(function(){
-           $('#localiza-profissional').click()
-                                      .focus();
-        });
-
-        $('#localiza-profissional').on('click', function(event){
-            $.get('../controller/profissional.php?id=&single=1',
-                function(data)
-                {
-                    data = JSON.parse(data);
-                    console.log(data);
-                    var html = "";
-                    for(var i = 0; i < data.length; i++) {
-                        html += "<tr id=\""+data[i].profissional_id +"\" style='font-size:9px'>id="+ data[i].cnpj +">";
-                        html +=     "<td>"+ data[i].nome +"</td>";
-                        html +=     "<td>"+ data[i].tipo +" - "+data[i].numero+"</td>";
-                        html +=     "<td><button onclick=\"selecionaProfissional("+ data[i].profissional_id +",'"+ data[i].nome +"')\">Selecionar</button></td>";
-                        html += "</tr>";
-                    }
-                        
-                   $('#modal-table tbody').append(html);
-                   $('#modal-table').dialog({
-                       show: { effect: 'fade', speed: '1500' },
-                       hide: { effect: 'fade', speed: '1000' },
-                       buttons: {
-                           OK: function() {
-                                 $('input[name="valor"]').focus();
-                                 $(this).dialog("close");
-                                 $('#modal-table tbody tr').remove();
-                             }
-                          },
-                      close: function() {
-                          $('#modal-table tbody tr').remove();
-                      }
-                   });
-                }
-            );
-        });
- 
-        $("#search-empresa").keyup(function(){
-            //pega o css da tabela 
-            //var tabela = $(this).attr('alt');
-            if( $(this).val() != ""){
-                $("#modal-table  tbody>tr").hide();
-                $("#modal-table  tbody>tr td:contains-ci('" + $(this).val() + "')").parent("tr").show();
-            } else{
-                $("#modal-table  tbody>tr").show();
-            }
-        }); 
+       $('#profissional_id').select2();
     });
     
-    $.extend($.expr[":"], {
-        "contains-ci": function(elem, i, match, array) {
-            return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-        }
-    });
-
     function selecionaProfissional(id, registro)
     {
        $('#responsavel').val(registro);
@@ -172,19 +133,22 @@
        $('#modal-table').dialog("close");
        $('#modal-table tbody tr').remove();            
     }
+
+    function getProfissionais(){
+      $.get('../controller/profissional.php?id=&single=1',
+            function(data)
+            {
+               data = JSON.parse(data);
+               var html = "";
+               for (var i = 0; i < data.length; i++) {
+                   html += "<option value=\""+data[i].profissional_id +"\">";
+                   html +=    data[i].nome+" - "+data[i].numero;
+                   html +=  "</option>";
+               }
+               $('#profissional_id').append(html);
+        });
+    }
+
     </script>
-    <div id="modal-table" title="Profissionais" style="max-height:200px !important; display:none; text-align:center;" >
-        <input type="text" name="search-empresa" id="search-empresa" alt="lista-empresas" value="" placeholder="Buscar">
-        <table border="0" style="width:100%" class="lista-empresas">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Registro</th>
-                </tr>  
-            </thead>
-            <tbody>
-                
-            </tbody>
-        </table>
     </div>
 </html>

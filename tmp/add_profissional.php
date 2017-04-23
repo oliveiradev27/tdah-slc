@@ -32,13 +32,14 @@ if(isset($_GET['id']))
                         <img src="../img/people.png">
                    </div>
                    <div style="float: right;width: 360px;">
-                       <input type="text" name="nome" placeholder="Nome do Profissional" class="tmp_p tmp_w" value="" style="border: 1px solid" required>
+                       <input type="text" name="nome" id="nome" placeholder="Nome do Profissional" class="tmp_p tmp_w" value="" style="border: 1px solid" required>
                        <div class="ClearBox"></div>
                        <input type="date" name="data" class="tmp_p tmp_w" value="" style="width: 200px;border: 1px solid" required>
                        <input type="button" name="localiza" class="submit_calen"  >
                    </div>
 
                </div>
+                <input type="hidden" name="registro_id" id="registro_id" value="">
                 <div class="ClearBox"></div>
                 <select class="tmp tmp_phone" name="cat_registro" required>
                     <option value="">Registro</option>
@@ -53,12 +54,10 @@ if(isset($_GET['id']))
                 </select>
                 <div class="ClearHr"><div class="icons_con"></div></div>                
                 <h3>CPF</h3>
-                <input type="text" name="documento" id="cpf" class="tmp_p tmp_w" placeholder="___.___.___-__" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14" value="" style="width: 142px">
+                <input type="text" name="documento" id="cpf" class="tmp_p tmp_w" required placeholder="___.___.___-__" onKeyPress="MascaraCPF(ava_pac.documento);" maxlength="14" value="" style="width: 142px">
                 <div class="ClearBox"></div>
                 <h3>E-mail</h3>
                 <input type="email" name="email" id="email" class="tmp_p tmp_w" value="" required placeholder="ex: nome@dominio.com">
-
-
                 <div class="ClearBox"></div>
                 <div id="info-contatos-tel">
                     <select class="tmp tmp_phone" name="telefone_tipo" >
@@ -67,15 +66,16 @@ if(isset($_GET['id']))
                     </select>
                     <input type="text" name="telefone" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required style="width: 160px" placeholder="(00) 00000-0000">
                     <input type="button" name="add-number" id="add-number" class="submit_more" title="Clique aqui para adicionar mais um número.">
+                     <div class="ClearBox"></div>
                     <div class="toggle-number">
                         <select class="tmp tmp_phone" name="telefone_tipo2" >
                             <option value="telefone2">Telefone</option>
                             <option value="celular2">Celular</option>
                         </select>
-                        <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone2)" maxlength="15" >
+                        <input type="text" name="telefone2" class="tmp_p tmp_w" value="" onKeyPress="MascaraTelefone(ava_pac.telefone)" maxlength="15" required placeholder="(00) 00000-0000" >
                     </div>
                 </div>
-
+                <input type="hidden" name="endereco_id" id="endereco_id" value="">
                 <div class="ClearHr"><div class="icons_hom"></div></div>
                 <h3> CEP</h3>
                 <input type="text" name="cep" id="cep" placeholder="00000-000" required class="tmp_p tmp_w" value="" style="width: 110px;font-weight: 500;padding: 0 3px" onKeyPress="MascaraCep(ava_pac.cep);"  maxlength="9" >
@@ -126,8 +126,6 @@ if(isset($_GET['id']))
                     <option value="SE">Sergipe (SE)</option>
                     <option value="TO">Tocantins (TO)</option>
                 </select>
-                <div class="ClearBoxli"></div>
-                <!--<input type="submit" name="localiza" class="submit_more"  >-->
                 <div class="ClearBox"></div>
                 <input type="submit" name="avancar" class="avancar" value="Concluir"  >
 
@@ -218,8 +216,7 @@ if(isset($_GET['id']))
                                     OK: function() {
                                         $('input[name="valor"]').focus();
                                         $(this).dialog("close");
-                                        sessionStorage.setItem("novo", 1);
-                                        $('form[name="ava_pac"]').unbind('submit').submit();
+                                        alterar();
                                     },
                                     Novo: function() {
                                         $('input[name="valor"]').focus();
@@ -250,8 +247,7 @@ if(isset($_GET['id']))
                                     }
                                 });
                             } else {
-                                sessionStorage.setItem("novo", 1);
-                                $('form[name="ava_pac"]').unbind('submit').submit();
+                                inserir();
                             }
                       });
              }            
@@ -314,8 +310,8 @@ if(isset($_GET['id']))
                     $('#cidade').val(data.endereco.cidade);
                     $('#estado').val(data.endereco.uf);
                     $('#cep').val(data.endereco.cep);
-                    $('#registro_id').val(data.registro_id);
-                    $('#empresa_id').val(data.empresa_id);
+                    $('#registro_id').val(data.registro.registro_id);
+                    $('#empresa_id').val(data.empresa_id).trigger('change');
                     $('#email').val(data.email);
                     $('#endereco_id').val(data.endereco.endereco_id);
                     $('[name = "cat_registro"]').val(data.registro.tipo);
@@ -343,21 +339,151 @@ if(isset($_GET['id']))
         });
 
     function inserir(){
+            var nome            = $('#nome').val();
+            var empresa_id      = $('#filial').val();
+            var email           = $('#email').val();
+            var data_nascimento = $('[name="data"]').val();
+            var cpf             = $('#cpf').val();
+            var cep             = $('#cep').val();
+            var endereco        = $('#endereco').val();
+            var numero          = $('#numero').val();
+            var bairro          = $('#bairro').val();
+            var complemento     = $('#complemento').val();
+            var cidade          = $('#cidade').val();
+            var estado          = $('#estado').val();
+            var cat_registro    = $('[name = "cat_registro"]').val();
+            var registro        = $('[name = "registro"]').val();
+            var contatos        = [
+                                    [$('[name="telefone_tipo"]').val(), $('[name="telefone"]').val()],
+                                    [$('[name="telefone_tipo2"]').val(), $('[name="telefone2"]').val()]
+                                  ];
+            contatos = JSON.stringify(contatos);
 
+            $.post('../controller/profissional.php',
+                    {
+                        nome            : nome,
+                        cpf             : cpf,
+                        email           : email,
+                        empresa_id      : empresa_id,
+                        data_nascimento : data_nascimento,
+                        telefones       : contatos,
+                        cep             : cep,
+                        logradouro      : endereco,
+                        numero          : numero,
+                        bairro          : bairro,
+                        complemento     : complemento,
+                        cidade          : cidade,
+                        uf              : estado,
+                        registro        : registro,
+                        cat_registro    : cat_registro,
+                    }, function(data, textStatus, xhr) {
+                        if(data)
+                        if(data){
+                            
+                            $('#profissional_id').val(data);
 
-
-        $("#mensagem p").text("Cadastrado com Sucesso!");
-        $("#mensagem small").text("Dados salvos na aplicação.");
-        $("#mensagem").dialog({
-                   show : {effect: 'fade', speed: '1500'},
-                   hide : {effect: 'fade', speed: '1000'},
-                   buttons: {
-                       OK: function() {
-                           $('input[name="valor"]').focus();
-                           $(this).dialog("close");
+                            $("#mensagem p").text("Cadastrado com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
                         }
-                  }
-       });
+            });
+    }
+
+    function alterar(){
+            var profissional_id = $('#profissional_id').val();
+            var nome            = $('#nome').val();
+            var empresa_id      = $('#filial').val();
+            var email           = $('#email').val();
+            var data_nascimento = $('[name="data"]').val();
+            var cpf             = $('#cpf').val();
+            var endereco_id     = $('#endereco_id').val();
+            var cep             = $('#cep').val();
+            var endereco        = $('#endereco').val();
+            var numero          = $('#numero').val();
+            var bairro          = $('#bairro').val();
+            var complemento     = $('#complemento').val();
+            var cidade          = $('#cidade').val();
+            var estado          = $('#estado').val();
+            var registro_id     = $('#registro_id').val();
+            var cat_registro    = $('[name = "cat_registro"]').val();
+            var registro        = $('[name = "registro"]').val();
+            var contatos        = [
+                                    [$('[name="telefone_tipo"]').val(), $('[name="telefone"]').val()],
+                                    [$('[name="telefone_tipo2"]').val(), $('[name="telefone2"]').val()]
+                                  ];
+            contatos = JSON.stringify(contatos);
+            console.log(empresa_id);
+            $.post('../controller/profissional.php',
+                    {
+                        profissional_id : profissional_id,
+                        nome            : nome,
+                        cpf             : cpf,
+                        email           : email,
+                        empresa_id      : empresa_id,
+                        data_nascimento : data_nascimento,
+                        telefones       : contatos,
+                        endereco_id     : endereco_id,
+                        cep             : cep,
+                        logradouro      : endereco,
+                        numero          : numero,
+                        bairro          : bairro,
+                        complemento     : complemento,
+                        cidade          : cidade,
+                        uf              : estado,
+                        registro_id     : registro_id,
+                        registro        : registro,
+                        cat_registro    : cat_registro
+                    }, function(data, textStatus, xhr) {
+                        if(data)
+                        if(data){
+                            
+                            $('#profissional_id').val(data);
+
+                            $("#mensagem p").text("Salvo com Sucesso!");
+                            $("#mensagem small").text("Dados salvos na aplicação.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        } else {
+                            $("#mensagem p").text("Erro!");
+                            $("#mensagem small").text("Não foi possivel salvar as informações.");
+                            $("#mensagem").dialog({
+                                show : {effect: 'fade', speed: '1500'},
+                                hide : {effect: 'fade', speed: '1000'},
+                                buttons: {
+                                    OK: function() {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                        }
+            });
     }
 
     function carregaSelectEmpresas() {

@@ -9,7 +9,7 @@ require_once ("../model/Profissional.php");
 require_once ("../model/Endereco.php");
 require_once ("../model/Registro.php");
 
-if (isset($_POST['nome']) && empty($_POST['profissional_id'])) {
+if (isset($_POST['nome']) && !isset($_POST['profissional_id'])) {
 	$registro = new Registro();
 	$registro->setTipo(trim($_POST['cat_registro']));
 	$registro->setNumero(trim($_POST['registro']));
@@ -30,7 +30,7 @@ if (isset($_POST['nome']) && empty($_POST['profissional_id'])) {
 	$profissional = new Profissional();
 	$profissional->setEmpresaId($_POST['empresa_id']);
 	$profissional->setNome(trim($_POST['nome']));
-	$profissional->setCpf(trim($_POST['documento']));
+	$profissional->setCpf(trim($_POST['cpf']));
 	$profissional->setEmail(trim($_POST['email']));
 	$profissional->setEnderecoId($endereco->getEnderecoId());
 	$profissional->setRegistroId($registro->getRegistroId());
@@ -50,10 +50,14 @@ if (isset($_POST['nome']) && empty($_POST['profissional_id'])) {
 		$contatoProfissionalDao->inserir($contato);
 	}
 	$id = $profissional->getId();
-	header("location: ../tmp/profissional.php?id=$id");
+	if ($id) {
+		echo json_encode($id);
+	} else {
 
+		echo json_encode(false);
+
+	}
 } else if (isset($_POST['profissional_id']) && $_POST['profissional_id'] != 0) {
-
 	$endereco = new Endereco();
 	$endereco->setEnderecoId(trim($_POST['endereco_id']));
 	$endereco->setLogradouro(trim($_POST['logradouro']));
@@ -64,38 +68,86 @@ if (isset($_POST['nome']) && empty($_POST['profissional_id'])) {
 	$endereco->setCidade(trim($_POST['cidade']));
 	$endereco->setNumero(trim($_POST['numero']));
 	$enderecoDao = new EnderecoDao();
-	$enderecoDao->alterar($endereco);
+
+	if (!$enderecoDao->alterar($endereco)) {
+		json_encode(false);
+		return;
+	}
 
 	$registro = new Registro();
 	$registro->setRegistroId(trim($_POST['registro_id']));
 	$registro->setTipo(trim($_POST['cat_registro']));
 	$registro->setNumero(trim($_POST['registro']));
 	$registroDao = new registroDao();
-	$registroDao->alterar($registro);
+	if (!$registroDao->alterar($registro)) {
+		json_encode(false);
+		return;
+	}
 
-	$contatos = json_decode($_POST['telefones']);
-	foreach ($contatos as $c) {
+	$contatoProfissionalDao = new ContatoProfissionalDao();
+	$contatosExistentes     = $contatoProfissionalDao->getPorProfissional($_POST['profissional_id']);
+	$contatosNovos          = json_decode($_POST['telefones']);
+	$numeroDeContatos       = count($contatosExistentes);
+	for ($i = 0; $i < $numeroDeContatos; $i++) {
+		if ($contatosNovos[$i][0] == $contatosExistentes[$i]->tipo && $contatosNovos[$i][1] == $contatosExistentes[$i]->valor) {
+			unset($contatosExistentes[$i]);
+			unset($contatosNovos[$i]);
+			continue;
+		}
+
+		if ($contatosNovos[$i][1] == "") {
+			unset($contatosNovos[$i]);
+			continue;
+		}
+
 		$contato = new ContatoProfissional();
-		$contato->setId($c->contato_id);
-		$contato->setTipo($c->tipo);
-		$contato->setValor($c->valor);
+		$contato->setId($contatosExistentes[$i]->contato_id);
+		$contato->setTipo($contatosNovos[$i][0]);
+		$contato->setValor($contatosNovos[$i][1]);
+		if (!$contatoProfissionalDao->alterar($contato)) {
+			echo json_encode(false);
+			return;
+		} else {
+			unset($contatosExistentes[$i]);
+			unset($contatosNovos[$i]);
+		}
+	}
 
-		$contatoProfissionalDao = new ContatoProfissionalDao();
-		$contatoProfissionalDao->alterar($contato);
+	if (count($contatosExistentes) > 0) {
+		$contatosExistentes = array_values($contatosExistentes);
+		if (!$contatoProfissionalDao->excluir($contatosExistentes[0]->contato_id)) {
+			echo json_encode(false);
+		}
+
+		return;
+	}
+
+	if (count($contatosNovos) > 0) {
+		$contatosNovos = array_values($contatosNovos);
+		if ($contatosNovos[0][1] != "") {
+			$contato = new ContatoProfissional();
+			$contato->setTipo($contatosNovos[0][0]);
+			$contato->setValor($contatosNovos[0][1]);
+			$contato->setProfissionalId($_POST['profissional_id']);
+
+			if (!$contatoProfissionalDao->inserir($contato)) {
+				json_encode(false);
+				return;
+			}
+		}
 	}
 
 	$profissional = new Profissional();
 	$profissional->setId($_POST['profissional_id']);
 	$profissional->setNome(trim($_POST['nome']));
 	$profissional->setDataNascimento(trim($_POST['data_nascimento']));
-	$profissional->setCpf(trim($_POST['documento']));
+	$profissional->setCpf(trim($_POST['cpf']));
 	$profissional->setEmail(trim($_POST['email']));
+	$profissional->setEmpresaId($_POST['empresa_id']);
 
 	$profissionalDao = new ProfissionalDao();
 	if ($profissionalDao->alterar($profissional)) {
-		//echo json_encode(true);
-		$id = $profissional->getId();
-		header("location: ../tmp/profissional.php?id=$id");
+		echo json_encode(true);
 	} else {
 
 		echo json_encode(false);
@@ -118,6 +170,6 @@ if (isset($_POST['nome']) && empty($_POST['profissional_id'])) {
 	} else {
 		echo json_encode($profissionalDao->get($id));
 	}
+} else {
+	echo json_encode(false);
 }
-
-?>
