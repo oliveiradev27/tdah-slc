@@ -8,7 +8,3 @@
 				["../tmp/rel_categorias.php"    , 'Relatorios'            , 'add4'],
 				["../tmp/config.php"  			, 'Configuração'          , 'add5'],
 			];
-
-
-
-?>

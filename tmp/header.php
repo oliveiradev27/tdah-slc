@@ -44,21 +44,20 @@
 		<header>
 			<nav role="custom-dropdown">
 				<input type="checkbox" id="button">
-				<label for="button" onclick><div class="Link icon_p" ><a href="../tmp/"><?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a></div></label>
+				<label for="button" onclick><div class="Link icon_p" ><a href="../tmp/">
+				<?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a></div></label>
 				<div class="linkPainel icon_p" >
 					<a href="../tmp/"><?php echo (isset($pagina['titulo'])) ? $pagina['titulo'] : "bla" ?></a>
 				</div>
 				<ul>
 					<?php
-					
-						foreach ($menu as $posicao) {
+						foreach ($menu as $posicao){
 							foreach ($permissoes as $permissao => $valor){
 								if (strpos($posicao[0], $permissao)){
 		 							if(in_array($_SESSION['usuario']->permissao, $valor))
 										echo"<li class=\"$posicao[2]\"><a href=\"$posicao[0]\">$posicao[1]</a></li>";
-									}
+								}
 							}
-							
 						}
 					?>
 					<!--<li class="add"><a href="../tmp/add_profissional.php">Adicionar Profissional</a></li>
@@ -66,7 +65,7 @@
 					<li class="add2"><a href="../tmp/add_paciente.php">Adicionar Paciente</a></li>
 					<li class="add3"><a href="../tmp/add_testes.php">Adicionar Testes</a></li>
 					<li class="add4"><a href="../tmp/rel_categorias.php">Relatorios</a></li>
-					<!--<li class="add5"><a href="../tmp/config.php">Configurações</a></li>-->
+					<li class="add5"><a href="../tmp/config.php">Configurações</a></li>-->
 					<li class="add6" id="sair"><a href="#">Sair</a></li>
 				</ul>
 			</nav>
