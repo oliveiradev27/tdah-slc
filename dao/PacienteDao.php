@@ -98,4 +98,22 @@ class PacienteDao extends Conexao
 		else
 			return false;
 	}
+
+	public function getPorNome($nome)
+	{
+			$con   = $query = $this->getConexao();
+			$query = $con->prepare('SELECT 
+										paciente_id AS id, nome, data_nascimento
+									FROM
+									 	paciente
+									WHERE
+										nome LIKE  :nome');
+			$query->bindValue(':nome', '%'.$nome.'%', PDO::PARAM_STR);									
+			$query 	= $this->executar($query)->fetchAll();
+			$pacientes = $query;
+			if($pacientes)
+				return $pacientes;
+			else
+			 	false;
+	}
 }

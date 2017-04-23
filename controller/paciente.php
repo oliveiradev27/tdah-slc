@@ -63,6 +63,10 @@ if (isset($_POST['nome']) && !isset($_POST['paciente_id'])){
 	$filiacao->paciente = $paciente;
 	echo json_encode($filiacao);
 
+} else if(isset($_GET['nome'])) {
+		$pacienteDao = new PacienteDao();
+		$pacientes 	 = $pacienteDao->getPorNome($_GET['nome']);
+		echo json_encode($pacientes);
 }
 
 ?>
