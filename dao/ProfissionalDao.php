@@ -267,6 +267,22 @@ class ProfissionalDao extends Conexao
 
 	 }
 
+	 public function getPorNome($nome)
+	 {
+			 $query = $this->getConexao()->prepare('SELECT
+														 profissional.profissional_id, profissional.nome, registro.tipo ,registro.numero
+											   		FROM
+											   			 profissional
+											   		INNER JOIN
+											   			registro
+											  		ON
+											   			profissional.registro_id = registro.registro_id
+											 		WHERE
+											   			profissional.nome LIKE :nome');
+			$query->bindValue(':nome', '%'.$nome.'%', PDO::PARAM_STR);	
+			return $this->executar($query)->fetchAll();
+	 }
+
 	 public function getAllBasico()
 	 {
 		$query = $this->getConexao()->prepare('SELECT

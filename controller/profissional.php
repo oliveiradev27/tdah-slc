@@ -165,6 +165,10 @@
 		} else {
 			echo json_encode($profissionalDao->get($id));
 		}
+	} else if(isset($_GET['nome'])) {
+		$profissionalDao = new ProfissionalDao();
+		$profissionais 	 = $profissionalDao->getPorNome($_GET['nome']);
+		echo json_encode($profissionais);
 	} else {
 		echo json_encode(false);
 	}

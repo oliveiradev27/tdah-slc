@@ -60,12 +60,6 @@
 							}
 						}
 					?>
-					<!--<li class="add"><a href="../tmp/add_profissional.php">Adicionar Profissional</a></li>
-					<li class="add1"><a href="../tmp/add_responsavel.php">Adicionar Responsável</a></li>
-					<li class="add2"><a href="../tmp/add_paciente.php">Adicionar Paciente</a></li>
-					<li class="add3"><a href="../tmp/add_testes.php">Adicionar Testes</a></li>
-					<li class="add4"><a href="../tmp/rel_categorias.php">Relatorios</a></li>
-					<li class="add5"><a href="../tmp/config.php">Configurações</a></li>-->
 					<li class="add6" id="sair"><a href="#">Sair</a></li>
 				</ul>
 			</nav>

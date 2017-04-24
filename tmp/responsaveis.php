@@ -1,11 +1,11 @@
 <?php 
-$pagina['titulo'] = "Pacientes";
+$pagina['titulo'] = "Responsaveis";
 include_once('header.php') ?>
 <style type="text/css" media="screen">
+
     .boxMain li {
         background: url(../img/li_bg_white.gif) no-repeat -10px 0px !important;
     }
-    
     .boxMain li:hover {
         background: url(../img/li_bg_white.gif) no-repeat -10px -62px !important;
     }
@@ -27,7 +27,7 @@ include_once('header.php') ?>
     <article>
         <div class="boxMain">
             <div class="ClearBox"></div>
-            <h3> Paciente</h3>
+            <h3>Responsavél</h3>
             <input type="text" name="paciente" id="paciente" class="tmp_p" placeholder="Nome:" value="" >
             <input type="submit" name="localiza" class="submit"  >
             <div class="ClearBox"></div>
@@ -54,7 +54,7 @@ include_once('header.php') ?>
         function pesquisar(){
             var nome = $('#paciente').val();
             if (nome != ""){
-                $.get('../controller/paciente.php?nome='+nome)
+                $.get('../controller/responsavel.php?nome='+nome)
                  .done(function(data){
                     if (data){
                         data     = JSON.parse(data);
@@ -63,10 +63,10 @@ include_once('header.php') ?>
 
                         for (var i = 0; i < data.length; i++){
                             html += "<li>";
-                            html +=   "<a href=\"add_paciente.php?id="+ data[i].id +"\">";
+                            html +=   "<a href=\"add_responsavel.php?id="+ data[i].responsavel_id +"\">";
                             html +=     "<img src=\"../img/Male-User-48.png\">";
                             html +=     "<strong>"+ data[i].nome +"<br>";
-                            html +=     "<span>"+ new Date(data[i].data_nascimento).toLocaleDateString() +"</span>";
+                            html +=     "<span>"+ data[i].cpf +"</span>";
                             html +=     "</strong>";
                             html +=    "</a>";
                             html +=  "</li>";

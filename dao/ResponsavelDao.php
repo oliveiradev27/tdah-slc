@@ -124,6 +124,25 @@ class ResponsavelDao extends Conexao
 			 	false;
 	}
 
+	public function getPorNome($nome)
+	{
+			$query = $this->getConexao()->prepare('SELECT 
+														responsavel_id, nome, cpf
+												   FROM
+												  		responsavel
+												   WHERE
+												   	    nome LIKE :nome');
+			$query->bindValue(':nome', '%'.$nome.'%', PDO::PARAM_STR);	
+			$query = $this->executar($query);
+			$responsaveis = $query->fetchAll();
+			
+			if($query)
+				return $responsaveis;
+			else
+			 	false;
+	}
+
+
 	public function getAllSingle()
 	{
 			$query = $this->getConexao()->prepare('SELECT 

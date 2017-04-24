@@ -149,7 +149,10 @@
 		echo json_encode($responsavel);
 	} else if(isset($_GET['nome'])) {
 		$responsavelDao = new ResponsavelDao();
-		$responsavel 	= $responsavelDao->getAllSingle();
+		if($_GET['nome'] == "")
+			$responsavel 	= $responsavelDao->getAllSingle();
+		else
+			$responsavel 	= $responsavelDao->getPorNome($_GET['nome']);
 		echo json_encode($responsavel);
 	}
  ?>
